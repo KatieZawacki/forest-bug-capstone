@@ -51,9 +51,9 @@ class _CheckInScreenState extends ConsumerState<CheckInScreen> {
     // Update forest progress
     await ForestGrowthService.updateForestProgress(db);
 
-    ref.refresh(checkInsProvider);
-    ref.refresh(bugStageProvider);
-    ref.refresh(forestProgressProvider);
+    final _checkInsRefresh = ref.refresh(checkInsProvider);
+    final _bugStageRefresh = ref.refresh(bugStageProvider);
+    final _forestProgressRefresh = ref.refresh(forestProgressProvider);
 
     if (!mounted) return;
 

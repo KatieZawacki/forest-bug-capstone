@@ -11,14 +11,11 @@ class BugGrowthService {
   }) async {
     var bugStage = await db.getLatestBugStage();
 
-    if (bugStage == null) {
-      // Initialize bug
-      bugStage = BugStage(
+    bugStage ??= BugStage(
         stage: 'Caterpillar 🐛',
         progressPoints: 0,
         updatedAt: DateTime.now(),
       );
-    }
 
     // Add points
     int newPoints = bugStage.progressPoints + pointsToAdd;

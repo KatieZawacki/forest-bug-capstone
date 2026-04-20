@@ -39,7 +39,7 @@ final addGoalProvider = FutureProvider.family<void, Goal>((ref, goal) async {
   final db = ref.watch(databaseProvider);
   await db.insertGoal(goal);
   // Invalidate goals to refresh the list
-  ref.refresh(goalsProvider);
+  final _ = ref.refresh(goalsProvider);
 });
 
 // Add check-in notifier
@@ -47,7 +47,7 @@ final addCheckInProvider = FutureProvider.family<void, CheckIn>((ref, checkIn) a
   final db = ref.watch(databaseProvider);
   await db.insertCheckIn(checkIn);
   // Invalidate check-ins to refresh the list
-  ref.refresh(checkInsProvider);
+  final _ = ref.refresh(checkInsProvider);
 });
 
 // Update bug stage notifier
@@ -59,7 +59,7 @@ final updateBugStageProvider = FutureProvider.family<void, BugStage>((ref, bugSt
     await db.insertBugStage(bugStage);
   }
   // Invalidate bug stage to refresh
-  ref.refresh(bugStageProvider);
+  final _ = ref.refresh(bugStageProvider);
 });
 
 // Update forest progress notifier
@@ -71,5 +71,5 @@ final updateForestProgressProvider = FutureProvider.family<void, ForestProgress>
     await db.insertForestProgress(progress);
   }
   // Invalidate forest progress to refresh
-  ref.refresh(forestProgressProvider);
+  final _ = ref.refresh(forestProgressProvider);
 });

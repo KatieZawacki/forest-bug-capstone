@@ -40,15 +40,16 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
 
     final goal = Goal(
       title: _titleController.text,
-      description: '${_descriptionController.text} (${_frequency}, ${_durationDays} days)',
+      description: '${_descriptionController.text} ($_frequency, $_durationDays days)',
       createdAt: DateTime.now(),
     );
 
     final db = ref.read(databaseProvider);
     await db.insertGoal(goal);
-    
-    ref.refresh(goalsProvider);
-    
+
+    final _ = ref.refresh(goalsProvider);
+    if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Goal created successfully!')),
     );
