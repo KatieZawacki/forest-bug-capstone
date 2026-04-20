@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final greetingProvider = Provider<String>((ref) {
-  return 'Welcome to Forest Bug!';
-});
+import 'screens/home_screen.dart';
+import 'screens/goal_setup_screen.dart';
+import 'screens/check_in_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -21,28 +20,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final greeting = ref.watch(greetingProvider);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Forest Bug'),
-      ),
-      body: Center(
-        child: Text(
-          greeting,
-          style: const TextStyle(fontSize: 24),
-          textAlign: TextAlign.center,
-        ),
-      ),
+      routes: {
+        '/goal-setup': (context) => const GoalSetupScreen(),
+        '/check-in': (context) => const CheckInScreen(),
+      },
     );
   }
 }
