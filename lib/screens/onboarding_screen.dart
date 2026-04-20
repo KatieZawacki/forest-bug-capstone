@@ -25,10 +25,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       assetPath: 'assets/cutscene/scene2.gif',
     ),
     _OnboardingStep(
-      title: 'Watch growth unfold',
+      title: '',
       description:
-          'Each check-in helps your bug evolve and the forest become more alive. Your progress is gentle, safe, and meaningful.',
-      assetPath: 'assets/cutscene/scene3.png',
+          'The houses quickly became skinny trees.',
+      assetPath: 'assets/cutscene/scene3.gif',
     ),
   ];
 
