@@ -19,10 +19,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       assetPath: 'assets/cutscene/scene1.gif',
     ),
     _OnboardingStep(
-      title: 'Pick your purpose',
+      title: '',
       description:
-          'Choose a goal that fits your rhythm — water, walk, rest, learn, or another habit that helps you feel brighter.',
-      assetPath: 'assets/cutscene/scene2.png',
+          'You see your old life pass by.',
+      assetPath: 'assets/cutscene/scene2.gif',
     ),
     _OnboardingStep(
       title: 'Watch growth unfold',
