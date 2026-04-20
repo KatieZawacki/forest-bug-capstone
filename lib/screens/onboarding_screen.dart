@@ -62,11 +62,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFFEDF7EE), Color(0xFFB7E4C7)],
-              ),
+              color: Colors.black,
             ),
           ),
           SafeArea(
@@ -82,6 +78,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                       const Spacer(),
@@ -89,7 +86,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         onPressed: () {
                           Navigator.pushReplacementNamed(context, '/home');
                         },
-                        child: const Text('Skip'),
+                        child: const Text(
+                          'Skip',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
@@ -176,37 +176,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       textAlign: TextAlign.center,
                                     ),
                                     const SizedBox(height: 40),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: AnimatedContainer(
-                                            duration: const Duration(milliseconds: 250),
-                                            height: 8,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white.withValues(alpha: 128),
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            child: FractionallySizedBox(
-                                              widthFactor: (_currentPage + 1) / _steps.length,
-                                              alignment: Alignment.centerLeft,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.green[700],
-                                                  borderRadius: BorderRadius.circular(8),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                    Center(
+                                      child: ElevatedButton(
+                                        onPressed: _goNext,
+                                        style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                                          backgroundColor: Colors.white,
+                                          foregroundColor: Colors.black,
                                         ),
-                                        const SizedBox(width: 12),
-                                        ElevatedButton(
-                                          onPressed: _goNext,
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                                          ),
-                                          child: Text(_currentPage == _steps.length - 1 ? 'Begin' : 'Continue'),
-                                        ),
-                                      ],
+                                        child: Text(_currentPage == _steps.length - 1 ? 'Begin' : 'Continue'),
+                                      ),
                                     ),
                                     const SizedBox(height: 24),
                                   ],
