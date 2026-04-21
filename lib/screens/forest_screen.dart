@@ -19,18 +19,18 @@ class ForestScreen extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          // Large bare tree image bottom center
+          // Large bare tree image slightly above bottom center, double size
           Positioned(
             left: 0,
             right: 0,
-            bottom: 0,
+            bottom: 20, // move down slightly
             top: 0,
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Image.asset(
                 'assets/images/bare tree.png',
                 fit: BoxFit.fitHeight,
-                width: 600,
+                width: 1200,
               ),
             ),
           ),
