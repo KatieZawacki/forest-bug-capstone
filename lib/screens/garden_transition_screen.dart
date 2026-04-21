@@ -18,12 +18,12 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/train/trainWindow.png',
-              fit: BoxFit.cover,
-            ),
-          ),
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/TULIP.gif',
+                  fit: BoxFit.cover,
+                ),
+              ),
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
