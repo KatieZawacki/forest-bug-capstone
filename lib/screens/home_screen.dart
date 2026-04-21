@@ -187,6 +187,16 @@ class HomeScreen extends ConsumerWidget {
                     label: const Text('Check-In'),
                   ),
                 ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/forest');
+                    },
+                    icon: const Icon(Icons.forest),
+                    label: const Text('Explore the Forest'),
+                  ),
+                ),
               ],
             ),
           ],

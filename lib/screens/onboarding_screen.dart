@@ -27,8 +27,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _OnboardingStep(
       title: '',
       description:
-          'The houses quickly became skinny trees.',
+          'The houses quickly become skinny trees.',
       assetPath: 'assets/cutscene/scene3.gif',
+    ),
+    _OnboardingStep(
+      title: '',
+      description:
+          'You finally arrive at a cottage in the woods',
+      assetPath: 'assets/cutscene/scene4.gif',
     ),
   ];
 
@@ -45,7 +51,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      Navigator.pushReplacementNamed(context, '/home');
+      // User enters the cottage after pressing 'Enter' on the last slide
+      Navigator.pushReplacementNamed(context, '/cottage');
     }
   }
 
@@ -184,7 +191,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                           backgroundColor: Colors.white,
                                           foregroundColor: Colors.black,
                                         ),
-                                        child: Text(_currentPage == _steps.length - 1 ? 'Begin' : 'Continue'),
+                                        child: Text(_currentPage == _steps.length - 1 ? 'Enter' : 'Continue'),
                                       ),
                                     ),
                                     const SizedBox(height: 24),
