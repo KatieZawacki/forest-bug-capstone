@@ -18,12 +18,7 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
       ),
       body: Stack(
         children: [
-              Positioned.fill(
-                child: Image.asset(
-                  'assets/images/TULIP.gif',
-                  fit: BoxFit.cover,
-                ),
-              ),
+          // Main content
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -46,6 +41,16 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                   label: const Text('Keep Going'),
                 ),
               ],
+            ),
+          ),
+          // Tulip sprite overlay (bottom center)
+          Positioned(
+            left: MediaQuery.of(context).size.width / 2 - 75,
+            bottom: 40,
+            child: Image.asset(
+              'assets/images/TULIP.gif',
+              width: 150,
+              height: 150,
             ),
           ),
         ],

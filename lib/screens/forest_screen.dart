@@ -15,10 +15,10 @@ class ForestScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 300,
-              height: 220,
+              width: 200,
+              height: 260,
               child: Image.asset(
-                'assets/images/tree1.jpg',
+                'assets/images/bare tree.png',
                 fit: BoxFit.contain,
               ),
             ),
