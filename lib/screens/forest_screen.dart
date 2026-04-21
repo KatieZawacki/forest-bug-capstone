@@ -10,26 +10,44 @@ class ForestScreen extends StatelessWidget {
         title: const Text('Forest'),
         backgroundColor: Colors.black,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 200,
-              height: 260,
+      body: Stack(
+        children: [
+          // Forest background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/forest background.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Large bare tree image centered
+          Center(
+            child: SizedBox(
+              width: 600,
+              height: 780,
               child: Image.asset(
                 'assets/images/bare tree.png',
                 fit: BoxFit.contain,
               ),
             ),
-            const SizedBox(height: 32),
-            const Text(
-              'A peaceful forest full of life.',
-              style: TextStyle(fontSize: 22, color: Colors.green),
-              textAlign: TextAlign.center,
+          ),
+          // Text at the bottom, overlapping image if needed
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 32,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                color: Colors.black.withOpacity(0.5),
+                child: const Text(
+                  'The trees are strong but bare',
+                  style: TextStyle(fontSize: 22, color: Colors.green),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
