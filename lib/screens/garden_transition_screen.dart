@@ -18,6 +18,13 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
       ),
       body: Stack(
         children: [
+          // Garden background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/garden background.png',
+              fit: BoxFit.cover,
+            ),
+          ),
           // Main content
           Center(
             child: Column(
@@ -27,7 +34,7 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   color: Colors.white.withOpacity(0.7),
                   child: const Text(
-                    "You can't help but notice the garden.",
+                    "You can't help but notice the garden. It is filled with weeds, but you see the potential.",
                     style: TextStyle(fontSize: 22, color: Colors.green),
                     textAlign: TextAlign.center,
                   ),
