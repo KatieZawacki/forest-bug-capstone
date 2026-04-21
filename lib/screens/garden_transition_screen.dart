@@ -18,15 +18,24 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
       ),
       body: Stack(
         children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/train/trainWindow.png',
+              fit: BoxFit.cover,
+            ),
+          ),
           Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 60),
-                const Text(
-                  "You can't help but notice the garden.",
-                  style: TextStyle(fontSize: 22, color: Colors.green),
-                  textAlign: TextAlign.center,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  color: Colors.white.withOpacity(0.7),
+                  child: const Text(
+                    "You can't help but notice the garden.",
+                    style: TextStyle(fontSize: 22, color: Colors.green),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 const SizedBox(height: 40),
                 ElevatedButton.icon(
@@ -39,7 +48,6 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               ],
             ),
           ),
-          // Tulip sprite removed
         ],
       ),
     );
