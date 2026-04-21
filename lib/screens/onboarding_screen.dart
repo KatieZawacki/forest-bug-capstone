@@ -34,7 +34,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       title: '',
       description:
           'You finally arrive at a cottage in the woods',
-      assetPath: 'assets/cutscene/scene4.gif',
+      assetPath: 'assets/cutscene/cottage front.gif',
     ),
   ];
 
