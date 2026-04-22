@@ -34,6 +34,20 @@ class ForestScreen extends StatelessWidget {
               ),
             ),
           ),
+          // Bare tree 2 image (left side, large)
+          Positioned(
+            left: -200,
+            bottom: 20,
+            top: 0,
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Image.asset(
+                'assets/images/bare tree 2.png',
+                fit: BoxFit.fitHeight,
+                width: 1200,
+              ),
+            ),
+          ),
           // Text at the bottom, overlapping image if needed
           Positioned(
             left: 0,
