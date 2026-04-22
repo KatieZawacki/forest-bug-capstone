@@ -25,16 +25,28 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
       const Offset(0.92, 0.75), // far right, moved down and right
     ];
 
-    // Example: List of flower image paths for each pile (null = no flower)
+    // List of flower image paths for each pile (null = no flower)
     final List<String?> flowerImages = [
-      'assets/images/FLOWER 1.png',
-      'assets/images/FLOWER 2.png',
-      'assets/images/FLOWER 3.png',
-      'assets/images/FLOWER 4.png',
-      'assets/images/FLOWER 5.png',
-      'assets/images/FLOWER 6.png',
-      'assets/images/FLOWER 7.png',
-      'assets/images/FLOWER 8.png',
+      'assets/images/FLOWER 1.png', // 1 - rare
+      'assets/images/FLOWER 2.png', // 2 - rare
+      'assets/images/FLOWER 3.png', // 3 - rare
+      'assets/images/FLOWER 4.png', // 4 - ultra rare
+      'assets/images/FLOWER 5.png', // 5 - rare
+      'assets/images/FLOWER 6.png', // 6 - ultra rare
+      'assets/images/FLOWER 7.png', // 7 - ultra rare
+      'assets/images/FLOWER 8.png', // 8 - rare
+    ];
+
+    // Rarity for each flower (same order as above)
+    final List<String> flowerRarities = [
+      'rare', // 1
+      'rare', // 2
+      'rare', // 3
+      'ultra rare', // 4
+      'rare', // 5
+      'ultra rare', // 6
+      'ultra rare', // 7
+      'rare', // 8
     ];
 
     final screenWidth = MediaQuery.of(context).size.width;
