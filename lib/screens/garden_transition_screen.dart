@@ -11,6 +11,34 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
   // ...existing code...
   @override
   Widget build(BuildContext context) {
+    // Example: 8 dirt pile positions
+    // Estimated positions for each dirt pile (left, bottom)
+    // Use relative positions (percentages of width and height)
+    final List<Offset> dirtPileRelativePositions = [
+      const Offset(0.08, 0.44), // far left
+      const Offset(0.22, 0.75),
+      const Offset(0.36, 0.44),
+      const Offset(0.48, 0.75),
+      const Offset(0.61, 0.44),
+      const Offset(0.72, 0.75),
+      const Offset(0.84, 0.44),
+      const Offset(0.92, 0.75), // far right, moved down and right
+    ];
+
+    // Example: List of flower image paths for each pile (null = no flower)
+    final List<String?> flowerImages = [
+      'assets/images/FLOWER 1.png',
+      'assets/images/FLOWER 2.png',
+      'assets/images/FLOWER 3.png',
+      'assets/images/FLOWER 4.png',
+      'assets/images/FLOWER 5.png',
+      'assets/images/FLOWER 6.png',
+      'assets/images/FLOWER 7.png',
+      'assets/images/FLOWER 8.png',
+    ];
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: const Text('On the Path'),
@@ -25,105 +53,23 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               fit: BoxFit.cover,
             ),
           ),
-          // FLOWER 3 (bottom far left)
-          Positioned(
-            left: 0,
-            bottom: 0,
-            child: Image.asset(
-              'assets/images/FLOWER 3.png',
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // FLOWER 4
-          Positioned(
-            left: 110,
-            bottom: 0,
-            child: Image.asset(
-              'assets/images/FLOWER 4.png',
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // FLOWER 5
-          Positioned(
-            left: 220,
-            bottom: 0,
-            child: Image.asset(
-              'assets/images/FLOWER 5.png',
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // FLOWER 6
-          Positioned(
-            left: 330,
-            bottom: 0,
-            child: Image.asset(
-              'assets/images/FLOWER 6.png',
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // FLOWER 7
-          Positioned(
-            left: 440,
-            bottom: 0,
-            child: Image.asset(
-              'assets/images/FLOWER 7.png',
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // FLOWER 8
-          Positioned(
-            left: 550,
-            bottom: 0,
-            child: Image.asset(
-              'assets/images/FLOWER 8.png',
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // FLOWER 9
-          Positioned(
-            left: 660,
-            bottom: 0,
-            child: Image.asset(
-              'assets/images/FLOWER 9.png',
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // FLOWER 11
-          Positioned(
-            left: 770,
-            bottom: 0,
-            child: Image.asset(
-              'assets/images/FLOWER 11.png',
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-          ),
-          // FLOWER 12 (far right)
-          Positioned(
-            left: 880,
-            bottom: 0,
-            child: Image.asset(
-              'assets/images/FLOWER 12.png',
-              width: 180,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-          ),
+
+          // 8 dirt pile flower spots
+          ...List.generate(dirtPileRelativePositions.length, (i) {
+            if (flowerImages[i] == null) return const SizedBox.shrink();
+            final rel = dirtPileRelativePositions[i];
+            return Positioned(
+              left: rel.dx * screenWidth - 150, // center the flower
+              bottom: rel.dy * screenHeight - 150, // center the flower
+              child: Image.asset(
+                flowerImages[i]!,
+                width: 300,
+                height: 300,
+                fit: BoxFit.contain,
+              ),
+            );
+          }),
+
           // Go Back button (bottom left)
           Positioned(
             left: 16,
@@ -138,18 +84,12 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               ),
             ),
           ),
-          // FLOWER 2 (moved further down)
+
+          // Main content (moved to 10% from the bottom)
           Positioned(
-            left: MediaQuery.of(context).size.width / 2 - 150,
-            bottom: 10,
-            child: Image.asset(
-              'assets/images/FLOWER 2.png',
-              width: 300,
-              height: 300,
-            ),
-          ),
-          // Main content (moved to top of stack)
-          Center(
+            left: 0,
+            right: 0,
+            bottom: screenHeight * 0.10,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -165,7 +105,7 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.pushNamed(context, '/forest');
@@ -174,46 +114,6 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                   label: const Text('Keep Going'),
                 ),
               ],
-            ),
-          ),
-          // PURPLE FLOWER (bottom center-right)
-          Positioned(
-            left: MediaQuery.of(context).size.width / 2 + 60,
-            bottom: 40,
-            child: Image.asset(
-              'assets/images/PURPLE FLOWER.png',
-              width: 300,
-              height: 300,
-            ),
-          ),
-          // PINK FLOWER (bottom left)
-          Positioned(
-            left: 40,
-            bottom: 40,
-            child: Image.asset(
-              'assets/images/PINK FLOWER.png',
-              width: 300,
-              height: 300,
-            ),
-          ),
-          // FLOWER (bottom right)
-          Positioned(
-            right: 40,
-            bottom: 40,
-            child: Image.asset(
-              'assets/images/FLOWER.png',
-              width: 300,
-              height: 300,
-            ),
-          ),
-          // YELLOW FLOWER (moved slightly to the right)
-          Positioned(
-            left: 180,
-            top: 340,
-            child: Image.asset(
-              'assets/images/YELLOW FLOWER.png',
-              width: 300,
-              height: 300,
             ),
           ),
         ],
