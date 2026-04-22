@@ -70,7 +70,7 @@ class ForestScreen extends StatelessWidget {
             child: Center(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withAlpha((0.5 * 255).toInt()),
                 child: const Text(
                   'The trees are strong but bare',
                   style: TextStyle(fontSize: 22, color: Colors.green),
@@ -88,7 +88,7 @@ class ForestScreen extends StatelessWidget {
               icon: const Icon(Icons.arrow_back),
               label: const Text('Go Back'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black.withOpacity(0.7),
+                backgroundColor: Colors.black.withAlpha((0.7 * 255).toInt()),
                 foregroundColor: Colors.white,
               ),
             ),

@@ -18,6 +18,16 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
       ),
       body: Stack(
         children: [
+          // FLOWER 3 (bottom left, above pink flower)
+          Positioned(
+            left: 60,
+            bottom: 200,
+            child: Image.asset(
+              'assets/images/FLOWER 3.png',
+              width: 300,
+              height: 300,
+            ),
+          ),
           // Garden background image
           Positioned.fill(
             child: Image.asset(
@@ -34,7 +44,7 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               icon: const Icon(Icons.arrow_back),
               label: const Text('Go Back'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black.withOpacity(0.7),
+                backgroundColor: Colors.black.withAlpha((0.7 * 255).toInt()),
                 foregroundColor: Colors.white,
               ),
             ),
@@ -59,7 +69,7 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                     horizontal: 24,
                     vertical: 16,
                   ),
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withAlpha((0.7 * 255).toInt()),
                   child: const Text(
                     "You can't help but notice the garden. It is filled with weeds, but you see the potential.",
                     style: TextStyle(fontSize: 22, color: Colors.green),
