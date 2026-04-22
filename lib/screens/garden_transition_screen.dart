@@ -39,17 +39,17 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               ),
             ),
           ),
-          // TWO FLOWERS (top left)
+          // FLOWER 2 (moved further down)
           Positioned(
-            left: 40,
-            top: 40,
+            left: MediaQuery.of(context).size.width / 2 - 150,
+            bottom: 10,
             child: Image.asset(
-              'assets/images/TWO FLOWERS.png',
-              width: 100,
-              height: 100,
+              'assets/images/FLOWER 2.png',
+              width: 300,
+              height: 300,
             ),
           ),
-          // Main content
+          // Main content (moved to top of stack)
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -77,14 +77,14 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               ],
             ),
           ),
-          // Tulip sprite overlay (bottom center)
+          // PURPLE FLOWER (bottom center-right)
           Positioned(
-            left: MediaQuery.of(context).size.width / 2 - 75,
+            left: MediaQuery.of(context).size.width / 2 + 60,
             bottom: 40,
             child: Image.asset(
-              'assets/images/TULIP.gif',
-              width: 150,
-              height: 150,
+              'assets/images/PURPLE FLOWER.png',
+              width: 300,
+              height: 300,
             ),
           ),
           // PINK FLOWER (bottom left)
@@ -93,8 +93,8 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
             bottom: 40,
             child: Image.asset(
               'assets/images/PINK FLOWER.png',
-              width: 100,
-              height: 100,
+              width: 300,
+              height: 300,
             ),
           ),
           // FLOWER (bottom right)
@@ -103,18 +103,18 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
             bottom: 40,
             child: Image.asset(
               'assets/images/FLOWER.png',
-              width: 100,
-              height: 100,
+              width: 300,
+              height: 300,
             ),
           ),
-          // YELLOW FLOWER (top right)
+          // YELLOW FLOWER (moved slightly to the right)
           Positioned(
-            right: 40,
-            top: 40,
+            left: 180,
+            top: 340,
             child: Image.asset(
               'assets/images/YELLOW FLOWER.png',
-              width: 100,
-              height: 100,
+              width: 300,
+              height: 300,
             ),
           ),
         ],

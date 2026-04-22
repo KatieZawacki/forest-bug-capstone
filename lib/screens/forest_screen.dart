@@ -48,6 +48,20 @@ class ForestScreen extends StatelessWidget {
               ),
             ),
           ),
+          // Pine tree image (right side, same size as other trees)
+          Positioned(
+            right: -200,
+            bottom: 20,
+            top: 0,
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Image.asset(
+                'assets/images/PINE TREE.png',
+                fit: BoxFit.fitHeight,
+                width: 1200,
+              ),
+            ),
+          ),
           // Text at the bottom, overlapping image if needed
           Positioned(
             left: 0,
