@@ -8,6 +8,30 @@ class GardenTransitionScreen extends StatefulWidget {
 }
 
 class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
+                    // Go Back button (bottom left)
+                    Positioned(
+                      left: 16,
+                      bottom: 16,
+                      child: ElevatedButton.icon(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.arrow_back),
+                        label: const Text('Go Back'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black.withOpacity(0.7),
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+          // RED FLOWER (top left)
+          Positioned(
+            left: 40,
+            top: 40,
+            child: Image.asset(
+              'assets/images/RED FLOWER.png',
+              width: 100,
+              height: 100,
+            ),
+          ),
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +102,16 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
             bottom: 40,
             child: Image.asset(
               'assets/images/FLOWER.png',
+              width: 100,
+              height: 100,
+            ),
+          ),
+          // YELLOW FLOWER (top right)
+          Positioned(
+            right: 40,
+            top: 40,
+            child: Image.asset(
+              'assets/images/YELLOW FLOWER.png',
               width: 100,
               height: 100,
             ),

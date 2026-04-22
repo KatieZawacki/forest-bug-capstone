@@ -51,6 +51,20 @@ class ForestScreen extends StatelessWidget {
               ),
             ),
           ),
+          // Go Back button (bottom left)
+          Positioned(
+            left: 16,
+            bottom: 16,
+            child: ElevatedButton.icon(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Go Back'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black.withOpacity(0.7),
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ),
         ],
       ),
     );
