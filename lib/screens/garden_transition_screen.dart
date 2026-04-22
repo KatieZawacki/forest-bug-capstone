@@ -18,20 +18,109 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
       ),
       body: Stack(
         children: [
-          // FLOWER 3 (bottom left, above pink flower)
-          Positioned(
-            left: 60,
-            bottom: 200,
-            child: Image.asset(
-              'assets/images/FLOWER 3.png',
-              width: 300,
-              height: 300,
-            ),
-          ),
           // Garden background image
           Positioned.fill(
             child: Image.asset(
               'assets/images/garden background.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // FLOWER 3 (bottom far left)
+          Positioned(
+            left: 0,
+            bottom: 0,
+            child: Image.asset(
+              'assets/images/FLOWER 3.png',
+              width: 180,
+              height: 180,
+              fit: BoxFit.cover,
+            ),
+          ),
+          // FLOWER 4
+          Positioned(
+            left: 110,
+            bottom: 0,
+            child: Image.asset(
+              'assets/images/FLOWER 4.png',
+              width: 180,
+              height: 180,
+              fit: BoxFit.cover,
+            ),
+          ),
+          // FLOWER 5
+          Positioned(
+            left: 220,
+            bottom: 0,
+            child: Image.asset(
+              'assets/images/FLOWER 5.png',
+              width: 180,
+              height: 180,
+              fit: BoxFit.cover,
+            ),
+          ),
+          // FLOWER 6
+          Positioned(
+            left: 330,
+            bottom: 0,
+            child: Image.asset(
+              'assets/images/FLOWER 6.png',
+              width: 180,
+              height: 180,
+              fit: BoxFit.cover,
+            ),
+          ),
+          // FLOWER 7
+          Positioned(
+            left: 440,
+            bottom: 0,
+            child: Image.asset(
+              'assets/images/FLOWER 7.png',
+              width: 180,
+              height: 180,
+              fit: BoxFit.cover,
+            ),
+          ),
+          // FLOWER 8
+          Positioned(
+            left: 550,
+            bottom: 0,
+            child: Image.asset(
+              'assets/images/FLOWER 8.png',
+              width: 180,
+              height: 180,
+              fit: BoxFit.cover,
+            ),
+          ),
+          // FLOWER 9
+          Positioned(
+            left: 660,
+            bottom: 0,
+            child: Image.asset(
+              'assets/images/FLOWER 9.png',
+              width: 180,
+              height: 180,
+              fit: BoxFit.cover,
+            ),
+          ),
+          // FLOWER 11
+          Positioned(
+            left: 770,
+            bottom: 0,
+            child: Image.asset(
+              'assets/images/FLOWER 11.png',
+              width: 180,
+              height: 180,
+              fit: BoxFit.cover,
+            ),
+          ),
+          // FLOWER 12 (far right)
+          Positioned(
+            left: 880,
+            bottom: 0,
+            child: Image.asset(
+              'assets/images/FLOWER 12.png',
+              width: 180,
+              height: 180,
               fit: BoxFit.cover,
             ),
           ),
