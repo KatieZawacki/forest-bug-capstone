@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class GardenTransitionScreen extends StatefulWidget {
   const GardenTransitionScreen({super.key});
 
@@ -31,7 +30,10 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
                   color: Colors.white.withOpacity(0.7),
                   child: const Text(
                     "You can't help but notice the garden. It is filled with weeds, but you see the potential.",
@@ -58,6 +60,26 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               'assets/images/TULIP.gif',
               width: 150,
               height: 150,
+            ),
+          ),
+          // PINK FLOWER (bottom left)
+          Positioned(
+            left: 40,
+            bottom: 40,
+            child: Image.asset(
+              'assets/images/PINK FLOWER.png',
+              width: 100,
+              height: 100,
+            ),
+          ),
+          // FLOWER (bottom right)
+          Positioned(
+            right: 40,
+            bottom: 40,
+            child: Image.asset(
+              'assets/images/FLOWER.png',
+              width: 100,
+              height: 100,
             ),
           ),
         ],
