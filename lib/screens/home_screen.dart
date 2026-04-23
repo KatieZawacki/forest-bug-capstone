@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/storage_providers.dart';
+import '../models/goal.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -21,6 +22,21 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Pets Button
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/pets');
+                    },
+                    icon: const Icon(Icons.pets),
+                    label: const Text('View Pets'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             // Active Goal Section
             const Text(
               'Active Goal',
@@ -58,8 +74,19 @@ class HomeScreen extends ConsumerWidget {
                         const SizedBox(height: 12),
                         Checkbox(
                           value: activeGoal.isCompleted,
-                          onChanged: (value) {
-                            // TODO: Mark goal as complete
+                          onChanged: (value) async {
+                            if (value == null) return;
+                            final db = ref.read(databaseProvider);
+                            final updatedGoal = Goal(
+                              id: activeGoal.id,
+                              title: activeGoal.title,
+                              description: activeGoal.description,
+                              isCompleted: value,
+                              createdAt: activeGoal.createdAt,
+                            );
+                            await db.updateGoal(updatedGoal);
+                            // ignore: unused_result
+                            ref.refresh(goalsProvider);
                           },
                         ),
                       ],

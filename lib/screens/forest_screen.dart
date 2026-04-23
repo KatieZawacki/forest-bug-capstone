@@ -63,14 +63,20 @@ class ForestScreen extends StatelessWidget {
             ),
           ),
 
-          // Seed image (bottom 3% of the screen)
+          // Seed image (bottom 3% of the screen, tappable)
           Positioned(
             left: 200,
             bottom: MediaQuery.of(context).size.height * 0.03,
-            child: Image.asset(
-              'assets/images/SEED.png',
-              width: 80,
-              height: 80,
+            child: GestureDetector(
+              onTap: () {
+                // Pop and return true to indicate seed collected
+                Navigator.pop(context, true);
+              },
+              child: Image.asset(
+                'assets/images/SEED.png',
+                width: 80,
+                height: 80,
+              ),
             ),
           ),
 

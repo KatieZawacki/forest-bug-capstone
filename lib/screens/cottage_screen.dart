@@ -1,7 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'companion_picker_dialog.dart';
+import '../providers/pet_provider.dart';
 
-class CottageScreen extends StatelessWidget {
+class CottageScreen extends StatefulWidget {
   const CottageScreen({super.key});
+
+  @override
+  State<CottageScreen> createState() => _CottageScreenState();
+}
+
+class _CottageScreenState extends State<CottageScreen> {
+  bool _checkedFirstVisit = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _showCompanionPickerIfFirstVisit();
+  }
+
+  Future<void> _showCompanionPickerIfFirstVisit() async {
+    if (_checkedFirstVisit) return;
+    _checkedFirstVisit = true;
+    final prefs = await SharedPreferences.getInstance();
+    final picked = prefs.getBool('picked_companion') ?? false;
+    final petProvider = Provider.of<PetProvider>(context, listen: false);
+    if (!picked && petProvider.pets.isEmpty) {
+      if (!mounted) return;
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => CompanionPickerDialog(),
+      );
+      await prefs.setBool('picked_companion', true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

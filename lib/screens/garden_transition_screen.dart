@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'forest_screen.dart';
 
 class GardenTransitionScreen extends StatefulWidget {
   const GardenTransitionScreen({super.key});
@@ -9,48 +10,56 @@ class GardenTransitionScreen extends StatefulWidget {
 
 class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
   // ...existing code...
+  // Each pile can be: empty, sprout, or a flower image
+  // We'll use a list of objects to track state for each pile
+  // Example state: {"state": "empty"}, {"state": "sprout", "plantedAt": DateTime}, {"state": "flower", "plantedAt": DateTime, "image": "assets/images/FLOWER 1.png"}
+  List<Map<String, dynamic>> dirtPiles = List.generate(8, (_) => {"state": "empty"});
+  int seedCount = 0; // Number of seeds in inventory
+
+  // Map flower image filename to rarity
+  final Map<String, String> flowerImageRarity = {
+    'assets/images/FLOWER 1.png': 'rare',
+    'assets/images/FLOWER 2.png': 'rare',
+    'assets/images/FLOWER 3.png': 'rare',
+    'assets/images/FLOWER 4.png': 'ultra rare',
+    'assets/images/FLOWER 5.png': 'rare',
+    'assets/images/FLOWER 6.png': 'ultra rare',
+    'assets/images/FLOWER 7.png': 'ultra rare',
+    'assets/images/FLOWER 8.png': 'rare',
+  };
+
+  // All flower images
+  final List<String> allFlowerImages = [
+    'assets/images/FLOWER 1.png',
+    'assets/images/FLOWER 2.png',
+    'assets/images/FLOWER 3.png',
+    'assets/images/FLOWER 4.png',
+    'assets/images/FLOWER 5.png',
+    'assets/images/FLOWER 6.png',
+    'assets/images/FLOWER 7.png',
+    'assets/images/FLOWER 8.png',
+  ];
+
+  // Helper to get flower images by rarity
+  List<String> getImagesByRarity(String rarity) =>
+      allFlowerImages.where((img) => flowerImageRarity[img] == rarity).toList();
+
   @override
   Widget build(BuildContext context) {
-    // Example: 8 dirt pile positions
-    // Estimated positions for each dirt pile (left, bottom)
-    // Use relative positions (percentages of width and height)
     final List<Offset> dirtPileRelativePositions = [
-      const Offset(0.08, 0.44), // far left
+      const Offset(0.08, 0.44),
       const Offset(0.22, 0.75),
       const Offset(0.36, 0.44),
       const Offset(0.48, 0.75),
       const Offset(0.61, 0.44),
       const Offset(0.72, 0.75),
       const Offset(0.84, 0.44),
-      const Offset(0.92, 0.75), // far right, moved down and right
-    ];
-
-    // List of flower image paths for each pile (null = no flower)
-    final List<String?> flowerImages = [
-      'assets/images/FLOWER 1.png', // 1 - rare
-      'assets/images/FLOWER 2.png', // 2 - rare
-      'assets/images/FLOWER 3.png', // 3 - rare
-      'assets/images/FLOWER 4.png', // 4 - ultra rare
-      'assets/images/FLOWER 5.png', // 5 - rare
-      'assets/images/FLOWER 6.png', // 6 - ultra rare
-      'assets/images/FLOWER 7.png', // 7 - ultra rare
-      'assets/images/FLOWER 8.png', // 8 - rare
-    ];
-
-    // Rarity for each flower (same order as above)
-    final List<String> flowerRarities = [
-      'rare', // 1
-      'rare', // 2
-      'rare', // 3
-      'ultra rare', // 4
-      'rare', // 5
-      'ultra rare', // 6
-      'ultra rare', // 7
-      'rare', // 8
+      const Offset(0.92, 0.75),
     ];
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final now = DateTime.now();
     return Scaffold(
       appBar: AppBar(
         title: const Text('On the Path'),
@@ -58,6 +67,27 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
       ),
       body: Stack(
         children: [
+          // Seed inventory display (top right)
+          Positioned(
+            top: 16,
+            right: 16,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.green, width: 2),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.spa, color: Colors.green),
+                  const SizedBox(width: 8),
+                  Text('Seeds: $seedCount', style: const TextStyle(fontSize: 18, color: Colors.green)),
+                ],
+              ),
+            ),
+          ),
           // Garden background image
           Positioned.fill(
             child: Image.asset(
@@ -68,17 +98,102 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
 
           // 8 dirt pile flower spots
           ...List.generate(dirtPileRelativePositions.length, (i) {
-            if (flowerImages[i] == null) return const SizedBox.shrink();
             final rel = dirtPileRelativePositions[i];
+            final pile = dirtPiles[i];
+            Widget? child;
+            if (pile["state"] == "empty") {
+              // Show tappable empty dirt pile if user has a seed
+              return Positioned(
+                left: rel.dx * screenWidth - 60,
+                bottom: rel.dy * screenHeight - 60,
+                child: GestureDetector(
+                  onTap: seedCount > 0
+                      ? () {
+                          // Plant seed: pick rarity, pick flower, set sprout
+                          final rand = (DateTime.now().millisecondsSinceEpoch + i) % 100;
+                          String rarity;
+                          if (rand < 60) {
+                            rarity = 'common'; // You can add common flowers later
+                          } else if (rand < 90) {
+                            rarity = 'rare';
+                          } else {
+                            rarity = 'ultra rare';
+                          }
+                          // Only pick from available flowers
+                          final options = getImagesByRarity(rarity);
+                          final image = options.isNotEmpty ? options[rand % options.length] : allFlowerImages[rand % allFlowerImages.length];
+                          setState(() {
+                            dirtPiles[i] = {
+                              "state": "sprout",
+                              "plantedAt": DateTime.now(),
+                              "image": image
+                            };
+                            seedCount = seedCount - 1;
+                          });
+                        }
+                      : null,
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    decoration: const BoxDecoration(
+                      color: Colors.transparent,
+                      shape: BoxShape.circle,
+                      border: Border.fromBorderSide(BorderSide.none),
+                    ),
+                    child: seedCount > 0
+                        ? const Center(child: Icon(Icons.spa, color: Colors.green, size: 40))
+                        : null,
+                  ),
+                ),
+              );
+            } else if (pile["state"] == "sprout") {
+              final plantedAt = pile["plantedAt"] as DateTime;
+              if (now.difference(plantedAt).inDays >= 1) {
+                setState(() {
+                  dirtPiles[i] = {
+                    "state": "flower",
+                    "plantedAt": plantedAt,
+                    "image": pile["image"]
+                  };
+                });
+                child = null;
+              } else {
+                child = Image.asset(
+                  'assets/images/SPROUT.png',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
+                );
+              }
+            } else if (pile["state"] == "flower") {
+              final plantedAt = pile["plantedAt"] as DateTime;
+              if (now.difference(plantedAt).inDays >= 6) {
+                setState(() {
+                  dirtPiles[i] = {"state": "empty"};
+                });
+                child = null;
+              } else {
+                child = Image.asset(
+                  pile["image"],
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
+                );
+              }
+            }
+            if (child == null) return const SizedBox.shrink();
+            // If sprout, position it slightly higher than flower
+            if (pile["state"] == "sprout") {
+              return Positioned(
+                left: rel.dx * screenWidth - 150,
+                bottom: rel.dy * screenHeight - 80, // raise sprout by 70 pixels
+                child: child,
+              );
+            }
             return Positioned(
-              left: rel.dx * screenWidth - 150, // center the flower
-              bottom: rel.dy * screenHeight - 150, // center the flower
-              child: Image.asset(
-                flowerImages[i]!,
-                width: 300,
-                height: 300,
-                fit: BoxFit.contain,
-              ),
+              left: rel.dx * screenWidth - 150,
+              bottom: rel.dy * screenHeight - 150,
+              child: child,
             );
           }),
 
@@ -119,8 +234,19 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/forest');
+                  onPressed: () async {
+                    // Go to forest screen and wait for result
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ForestScreen(),
+                      ),
+                    );
+                    if (result == true) {
+                      setState(() {
+                        seedCount = seedCount + 1;
+                      });
+                    }
                   },
                   icon: const Icon(Icons.arrow_forward),
                   label: const Text('Keep Going'),
