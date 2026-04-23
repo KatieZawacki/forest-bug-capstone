@@ -20,41 +20,32 @@ class CompanionPickerDialog extends StatelessWidget {
     return AlertDialog(
       title: const Text('Pick your companion'),
       content: SizedBox(
-        width: 300,
-        child: GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          children: companions.map((companion) {
-            return Builder(
-              builder: (context) => GestureDetector(
-                onTap: () async {
-                  final pet = Pet(
-                    id: Random().nextInt(1000000).toString(),
-                    name: companion['name']!,
-                    type: companion['type']!,
-                    level: 1,
-                    imagePath: companion['image']!,
-                  );
-                  await context.read<PetProvider>().addPet(pet);
-                  if (context.mounted) {
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: Column(
-                  children: [
-                    Image.asset(
-                      companion['image']!,
-                      width: 80,
-                      height: 80,
-                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.pets, size: 80),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(companion['name']!),
-                  ],
-                ),
-              ),
-            );
-          }).toList(),
+        width: 350,
+        height: 350,
+        child: Center(
+          child: GestureDetector(
+            onTap: () async {
+              final companion = companions[0];
+              final pet = Pet(
+                id: Random().nextInt(1000000).toString(),
+                name: companion['name']!,
+                type: companion['type']!,
+                level: 1,
+                imagePath: companion['image']!,
+              );
+              await context.read<PetProvider>().addPet(pet);
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: Image.asset(
+              companions[0]['image']!,
+              width: 300,
+              height: 300,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) => const Icon(Icons.pets, size: 300),
+            ),
+          ),
         ),
       ),
     );

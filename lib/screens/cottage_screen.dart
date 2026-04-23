@@ -12,6 +12,19 @@ class CottageScreen extends StatefulWidget {
 }
 
 class _CottageScreenState extends State<CottageScreen> {
+    Future<void> _resetPetSelection() async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('picked_companion');
+      final petProvider = Provider.of<PetProvider>(context, listen: false);
+      final pets = List.of(petProvider.pets);
+      for (final pet in pets) {
+        await petProvider.removePet(pet.id);
+      }
+      setState(() {
+        _checkedFirstVisit = false;
+      });
+      await _showCompanionPickerIfFirstVisit();
+    }
   bool _checkedFirstVisit = false;
 
   @override
@@ -71,6 +84,16 @@ class _CottageScreenState extends State<CottageScreen> {
                     Navigator.pushNamed(context, '/garden-transition');
                   },
                   child: const Text('Explore the Forest'),
+                ),
+                const SizedBox(width: 20),
+                // Debug button to reset pet selection
+                ElevatedButton(
+                  onPressed: _resetPetSelection,
+                  child: const Text('Reset Pet Selection'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
                 ),
               ],
             ),

@@ -13,7 +13,23 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
   // Each pile can be: empty, sprout, or a flower image
   // We'll use a list of objects to track state for each pile
   // Example state: {"state": "empty"}, {"state": "sprout", "plantedAt": DateTime}, {"state": "flower", "plantedAt": DateTime, "image": "assets/images/FLOWER 1.png"}
-  List<Map<String, dynamic>> dirtPiles = List.generate(8, (_) => {"state": "empty"});
+  // On first use, each pile starts with a weed
+  List<Map<String, dynamic>> dirtPiles = List.generate(8, (_) => {"state": "weed"});
+    // Helper to update weeds for empty piles left for 2+ days
+    void updateWeedsForEmptyPiles() {
+      final now = DateTime.now();
+      setState(() {
+        for (int i = 0; i < dirtPiles.length; i++) {
+          final pile = dirtPiles[i];
+          if (pile["state"] == "empty" && pile["emptiedAt"] != null) {
+            final emptiedAt = pile["emptiedAt"] as DateTime;
+            if (now.difference(emptiedAt).inDays >= 2) {
+              dirtPiles[i] = {"state": "weed"};
+            }
+          }
+        }
+      });
+    }
   int seedCount = 0; // Number of seeds in inventory
 
   // Map flower image filename to rarity
@@ -60,6 +76,8 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final now = DateTime.now();
+    // Check for weeds on build
+    updateWeedsForEmptyPiles();
     return Scaffold(
       appBar: AppBar(
         title: const Text('On the Path'),
@@ -100,26 +118,44 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
           ...List.generate(dirtPileRelativePositions.length, (i) {
             final rel = dirtPileRelativePositions[i];
             final pile = dirtPiles[i];
-            Widget? child;
+            Widget? overlayChild;
+            // Weed state: show weed image, tap to clear
+            if (pile["state"] == "weed") {
+              return Positioned(
+                left: rel.dx * screenWidth - 150,
+                bottom: rel.dy * screenHeight - 150,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      dirtPiles[i] = {"state": "empty", "emptiedAt": DateTime.now()};
+                    });
+                  },
+                  child: Image.asset(
+                    'assets/images/WEED.png',
+                    width: 300,
+                    height: 300,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              );
+            }
+            // Empty state: show dirt pile, allow planting if user has seeds
             if (pile["state"] == "empty") {
-              // Show tappable empty dirt pile if user has a seed
               return Positioned(
                 left: rel.dx * screenWidth - 60,
                 bottom: rel.dy * screenHeight - 60,
                 child: GestureDetector(
                   onTap: seedCount > 0
                       ? () {
-                          // Plant seed: pick rarity, pick flower, set sprout
                           final rand = (DateTime.now().millisecondsSinceEpoch + i) % 100;
                           String rarity;
                           if (rand < 60) {
-                            rarity = 'common'; // You can add common flowers later
+                            rarity = 'common';
                           } else if (rand < 90) {
                             rarity = 'rare';
                           } else {
                             rarity = 'ultra rare';
                           }
-                          // Only pick from available flowers
                           final options = getImagesByRarity(rarity);
                           final image = options.isNotEmpty ? options[rand % options.length] : allFlowerImages[rand % allFlowerImages.length];
                           setState(() {
@@ -146,7 +182,9 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                   ),
                 ),
               );
-            } else if (pile["state"] == "sprout") {
+            }
+            // Sprout state
+            if (pile["state"] == "sprout") {
               final plantedAt = pile["plantedAt"] as DateTime;
               if (now.difference(plantedAt).inDays >= 1) {
                 setState(() {
@@ -156,24 +194,26 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                     "image": pile["image"]
                   };
                 });
-                child = null;
+                return const SizedBox.shrink();
               } else {
-                child = Image.asset(
+                overlayChild = Image.asset(
                   'assets/images/SPROUT.png',
                   width: 300,
                   height: 300,
                   fit: BoxFit.contain,
                 );
               }
-            } else if (pile["state"] == "flower") {
+            }
+            // Flower state
+            if (pile["state"] == "flower") {
               final plantedAt = pile["plantedAt"] as DateTime;
               if (now.difference(plantedAt).inDays >= 6) {
                 setState(() {
-                  dirtPiles[i] = {"state": "empty"};
+                  dirtPiles[i] = {"state": "empty", "emptiedAt": DateTime.now()};
                 });
-                child = null;
+                return const SizedBox.shrink();
               } else {
-                child = Image.asset(
+                overlayChild = Image.asset(
                   pile["image"],
                   width: 300,
                   height: 300,
@@ -181,19 +221,19 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                 );
               }
             }
-            if (child == null) return const SizedBox.shrink();
+            if (overlayChild == null) return const SizedBox.shrink();
             // If sprout, position it slightly higher than flower
             if (pile["state"] == "sprout") {
               return Positioned(
                 left: rel.dx * screenWidth - 150,
-                bottom: rel.dy * screenHeight - 80, // raise sprout by 70 pixels
-                child: child,
+                bottom: rel.dy * screenHeight - 80,
+                child: overlayChild,
               );
             }
             return Positioned(
               left: rel.dx * screenWidth - 150,
               bottom: rel.dy * screenHeight - 150,
-              child: child,
+              child: overlayChild,
             );
           }),
 
