@@ -64,13 +64,41 @@ class _CottageScreenState extends State<CottageScreen> {
 
   // List of possible states and their corresponding images for each pet type
   final Map<String, Map<String, String>> petStateImages = {
+    'Dog 1': {
+      'sit': 'assets/images/DOG 1.png',
+      'stage1': 'assets/images/DOG 1 STAGE 1.png',
+      'stage2': 'assets/images/DOG 1 STAGE 2.png',
+    },
+    'Dog 2': {
+      'sit': 'assets/images/DOG 2.png',
+      'stage1': 'assets/images/DOG 2 STAGE 1.png',
+      'stage2': 'assets/images/DOG 2 STAGE 2.png',
+    },
+    'Dog 3': {
+      'sit': 'assets/images/DOG 3.png',
+      'stage1': 'assets/images/DOG 3 STAGE 1.png',
+      'stage2': 'assets/images/DOG 3 STAGE 2.png',
+    },
+    'Dog 4': {
+      'sit': 'assets/images/DOG 4.png',
+      'stage1': 'assets/images/DOG 4 STAGE 1.png',
+      'stage2': 'assets/images/DOG 4 STAGE 2.png',
+    },
     'Cat 1': {
       'sit': 'assets/images/CAT 1.png',
       'stage1': 'assets/images/CAT 1 STAGE 1.png',
       'stage2': 'assets/images/CAT 1 STAGE 2.png',
     },
-    'Cat 2': {'sit': 'assets/images/CAT 2.png'},
-    // Add more pets here
+    'Cat 2': {
+      'sit': 'assets/images/CAT 2.png',
+      'stage1': 'assets/images/CAT 2 STAGE 1.png',
+      'stage2': 'assets/images/CAT 2 STAGE 2.png',
+    },
+    'Cat 3': {
+      'sit': 'assets/images/CAT 3.png',
+      'stage1': 'assets/images/CAT 3 STAGE 1.png',
+      'stage2': 'assets/images/CAT 3 STAGE 2.png',
+    },
   };
 
   // 45% chance to change pet state when leaving cottage
