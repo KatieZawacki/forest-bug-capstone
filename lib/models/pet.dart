@@ -19,11 +19,16 @@ class Pet extends HiveObject {
   @HiveField(4)
   String imagePath;
 
+  /// New field for pet state (sit, lay, stand, etc)
+  @HiveField(5)
+  String state;
+
   Pet({
     required this.id,
     required this.name,
     required this.type,
     required this.level,
     required this.imagePath,
+    this.state = 'sit',
   });
 }

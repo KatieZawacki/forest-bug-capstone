@@ -10,6 +10,19 @@ class CompanionPickerDialog extends StatelessWidget {
       'type': 'Cat',
       'name': 'Katy Cat',
       'image': 'assets/images/KATY CAT SIT.png',
+      'state': 'sit',
+    },
+    {
+      'type': 'Cat',
+      'name': 'Katy Cat',
+      'image': 'assets/images/KATY CAT LAY.png',
+      'state': 'lay',
+    },
+    {
+      'type': 'Cat',
+      'name': 'Katy Cat',
+      'image': 'assets/images/KATY CAT STAND.png',
+      'state': 'stand',
     },
   ];
 
@@ -25,6 +38,7 @@ class CompanionPickerDialog extends StatelessWidget {
         child: Center(
           child: GestureDetector(
             onTap: () async {
+              // For demo, pick the first state (sit)
               final companion = companions[0];
               final pet = Pet(
                 id: Random().nextInt(1000000).toString(),
@@ -32,6 +46,7 @@ class CompanionPickerDialog extends StatelessWidget {
                 type: companion['type']!,
                 level: 1,
                 imagePath: companion['image']!,
+                state: companion['state']!,
               );
               await context.read<PetProvider>().addPet(pet);
               if (context.mounted) {
