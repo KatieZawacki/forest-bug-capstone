@@ -13,43 +13,65 @@ class CottageScreen extends StatefulWidget {
 }
 
 class _CottageScreenState extends State<CottageScreen> {
-    Future<void> _resetPetSelection() async {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('picked_companion');
-      final petProvider = Provider.of<PetProvider>(context, listen: false);
-      final pets = List.of(petProvider.pets);
-      for (final pet in pets) {
-        await petProvider.removePet(pet.id);
-      }
-      setState(() {});
-      // Show the companion picker dialog after reset
-      if (mounted) {
-        await showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => CompanionPickerDialog(),
-        );
-        await prefs.setBool('picked_companion', true);
-      }
+  @override
+  void initState() {
+    super.initState();
+    debugPrint('CottageScreen: initState called');
+    _checkPickedCompanion();
+  }
+
+  Future<void> _checkPickedCompanion() async {
+    debugPrint('CottageScreen: _checkPickedCompanion called');
+    final prefs = await SharedPreferences.getInstance();
+    final picked = prefs.getBool('picked_companion') ?? false;
+    debugPrint('CottageScreen: picked_companion = \\$picked');
+    if (!picked && mounted) {
+      await Future.delayed(Duration.zero); // Ensure context is ready
+      debugPrint('CottageScreen: showing CompanionPickerDialog');
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => CompanionPickerDialog(),
+      );
+      debugPrint('CottageScreen: dialog closed');
+      await prefs.setBool('picked_companion', true);
+      if (mounted) setState(() {});
     }
+  }
 
+  Future<void> _resetPetSelection() async {
+    debugPrint('CottageScreen: _resetPetSelection called');
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('picked_companion');
+    final petProvider = Provider.of<PetProvider>(context, listen: false);
+    final pets = List.of(petProvider.pets);
+    for (final pet in pets) {
+      await petProvider.removePet(pet.id);
+    }
+    setState(() {});
+    // Show the companion picker dialog after reset
+    if (mounted) {
+      debugPrint('CottageScreen: showing CompanionPickerDialog (reset)');
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => CompanionPickerDialog(),
+      );
+      debugPrint('CottageScreen: dialog closed (reset)');
+      await prefs.setBool('picked_companion', true);
+    }
+  }
 
-
-
-    // List of possible states and their corresponding images for each pet type
-    final Map<String, Map<String, String>> petStateImages = {
-      // Example for Katy Cat
-      'Katy Cat': {
-        'sit': 'assets/images/KATY CAT SIT.png',
-        'lay': 'assets/images/KATY CAT LAY.png',
-        'stand': 'assets/images/KATY CAT STAND.png',
-      },
-      // Add more pets here
-    };
-
-
-
-
+  // List of possible states and their corresponding images for each pet type
+  final Map<String, Map<String, String>> petStateImages = {
+    'Cat 1': {
+      'sit': 'assets/images/CAT 1.png',
+      'stage1': 'assets/images/CAT 1 STAGE 1.png',
+      'stage2': 'assets/images/CAT 1 STAGE 2.png',
+    },
+    'Cat 2': {'sit': 'assets/images/CAT 2.png'},
+    // Add more pets here
+  };
 
   // 45% chance to change pet state when leaving cottage
   void _maybeRandomizePetState() {
@@ -81,15 +103,13 @@ class _CottageScreenState extends State<CottageScreen> {
     super.deactivate();
   }
 
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
+    debugPrint('CottageScreen: build START');
     final petProvider = Provider.of<PetProvider>(context);
+    debugPrint('CottageScreen: got petProvider, pets length = \\${petProvider.pets.length}');
     final pet = petProvider.pets.isNotEmpty ? petProvider.pets.first : null;
+    debugPrint('CottageScreen: build END');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cottage'),
@@ -101,6 +121,7 @@ class _CottageScreenState extends State<CottageScreen> {
             child: Image.asset(
               'assets/images/COTTAGE FLOOR 1.png',
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey),
             ),
           ),
           // Main content column (centered)
@@ -135,11 +156,11 @@ class _CottageScreenState extends State<CottageScreen> {
                     // Debug button to reset pet selection
                     ElevatedButton(
                       onPressed: _resetPetSelection,
-                      child: const Text('Reset Pet Selection'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
                       ),
+                      child: const Text('Reset Pet Selection'),
                     ),
                   ],
                 ),
@@ -161,21 +182,23 @@ class _CottageScreenState extends State<CottageScreen> {
                     width: 300,
                     height: 300,
                     fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.bed, size: 100),
                   ),
                   if (pet != null)
                     Builder(
                       builder: (context) {
                         // Pick image and position based on state
                         final state = pet.state;
-                        final image = petStateImages[pet.name]?[state] ?? pet.imagePath;
+                        final image =
+                            petStateImages[pet.name]?[state] ?? pet.imagePath;
                         Alignment alignment = Alignment.center;
                         Offset offset = Offset(0, -55); // Default for "sit"
-                        if (state == 'lay') {
+                        if (state == 'stage1') {
                           alignment = Alignment.centerLeft;
-                          offset = Offset(-60, 0); // Left side
-                        } else if (state == 'stand') {
+                          offset = Offset(-60, 0); // Left side (stage1)
+                        } else if (state == 'stage2') {
                           alignment = Alignment.topCenter;
-                          offset = Offset(0, 30); // Upper center
+                          offset = Offset(0, 30); // Upper center (stage2)
                         }
                         return Positioned.fill(
                           child: Align(
@@ -187,6 +210,7 @@ class _CottageScreenState extends State<CottageScreen> {
                                 width: 300,
                                 height: 300,
                                 fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.pets, size: 100),
                               ),
                             ),
                           ),

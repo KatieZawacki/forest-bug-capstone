@@ -8,21 +8,15 @@ class CompanionPickerDialog extends StatelessWidget {
   final List<Map<String, String>> companions = [
     {
       'type': 'Cat',
-      'name': 'Katy Cat',
-      'image': 'assets/images/KATY CAT SIT.png',
+      'name': 'Cat 1',
+      'image': 'assets/images/CAT 1.png',
       'state': 'sit',
     },
     {
       'type': 'Cat',
-      'name': 'Katy Cat',
-      'image': 'assets/images/KATY CAT LAY.png',
-      'state': 'lay',
-    },
-    {
-      'type': 'Cat',
-      'name': 'Katy Cat',
-      'image': 'assets/images/KATY CAT STAND.png',
-      'state': 'stand',
+      'name': 'Cat 2',
+      'image': 'assets/images/CAT 2.png',
+      'state': 'sit',
     },
   ];
 
@@ -33,34 +27,65 @@ class CompanionPickerDialog extends StatelessWidget {
     return AlertDialog(
       title: const Text('Pick your companion'),
       content: SizedBox(
-        width: 350,
+        width: 400,
         height: 350,
-        child: Center(
-          child: GestureDetector(
-            onTap: () async {
-              // For demo, pick the first state (sit)
-              final companion = companions[0];
-              final pet = Pet(
-                id: Random().nextInt(1000000).toString(),
-                name: companion['name']!,
-                type: companion['type']!,
-                level: 1,
-                imagePath: companion['image']!,
-                state: companion['state']!,
-              );
-              await context.read<PetProvider>().addPet(pet);
-              if (context.mounted) {
-                Navigator.of(context).pop();
-              }
-            },
-            child: Image.asset(
-              companions[0]['image']!,
-              width: 300,
-              height: 300,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) => const Icon(Icons.pets, size: 300),
-            ),
-          ),
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: companions.map((companion) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      debugPrint(
+                        'CompanionPickerDialog: Companion tapped: \\${companion['name']} \\${companion['state']}',
+                      );
+                      final pet = Pet(
+                        id: Random().nextInt(1000000).toString(),
+                        name: companion['name']!,
+                        type: companion['type']!,
+                        level: 1,
+                        imagePath: companion['image']!,
+                        state: companion['state']!,
+                      );
+                      await context.read<PetProvider>().addPet(pet);
+                      debugPrint(
+                        'CompanionPickerDialog: Pet added, popping dialog',
+                      );
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.asset(
+                        companion['image']!,
+                        width: 150,
+                        height: 150,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.pets, size: 100),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    companion['name']!,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  // Removed state label
+                ],
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
