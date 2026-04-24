@@ -335,6 +335,19 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                   ),
                 ),
               ),
+              // Butterfly 4 GIF (fourth dirt pile, not already occupied)
+              Positioned(
+                left: dirtPileRelativePositions[3].dx * screenWidth - 150,
+                bottom: dirtPileRelativePositions[3].dy * screenHeight - 150,
+                child: IgnorePointer(
+                  child: Image.asset(
+                    'assets/images/BUTTERFLY 4 GIF.gif',
+                    width: 300,
+                    height: 300,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
         ],
       ),
     );
