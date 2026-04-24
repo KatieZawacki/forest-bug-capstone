@@ -294,6 +294,20 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               ],
             ),
           ),
+          // Butterfly GIF (top left) - moved to top layer
+          // Butterfly GIF (moved to first dirt pile)
+          Positioned(
+            left: dirtPileRelativePositions[0].dx * screenWidth - 150,
+            bottom: dirtPileRelativePositions[0].dy * screenHeight - 150,
+            child: IgnorePointer(
+              child: Image.asset(
+                'assets/images/BUTTERFLY 1 GIF.gif',
+                width: 300,
+                height: 300,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
         ],
       ),
     );
