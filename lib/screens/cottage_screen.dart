@@ -186,23 +186,28 @@ class _CottageScreenState extends State<CottageScreen> {
                       ),
                     ),
                     ),
-                    // Notebook image under the Make a Goal button (top layer, over desk)
-                    Positioned(
-                      top: 35, // 15px higher
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: SizedBox(
-                          width: 200,
-                          height: 200,
-                          child: Image.asset(
-                            'assets/images/NOTEBOOK 1.png',
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) => Container(width: 200, height: 200, color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ),
+                   // Notebook image under the Make a Goal button (top layer, over desk)
+                   Positioned(
+                     top: 35, // 15px higher
+                     left: 0,
+                     right: 0,
+                     child: Center(
+                       child: SizedBox(
+                         width: 200,
+                         height: 200,
+                         child: GestureDetector(
+                           onTap: () {
+                             Navigator.pushNamed(context, '/goal-setup');
+                           },
+                           child: Image.asset(
+                             'assets/images/NOTEBOOK 1.png',
+                             fit: BoxFit.contain,
+                             errorBuilder: (context, error, stackTrace) => Container(width: 200, height: 200, color: Colors.grey),
+                           ),
+                         ),
+                       ),
+                     ),
+                   ),
                 ],
               ),
             ),
