@@ -1,3 +1,4 @@
+          // Butterfly 3 GIF (third dirt pile) - placed in Stack children
 import 'package:flutter/material.dart';
 import 'forest_screen.dart';
 
@@ -321,6 +322,19 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               ),
             ),
           ),
+              // Butterfly 3 GIF (third dirt pile, always shown on its pile)
+              Positioned(
+                left: dirtPileRelativePositions[2].dx * screenWidth - 150,
+                bottom: dirtPileRelativePositions[2].dy * screenHeight - 150,
+                child: IgnorePointer(
+                  child: Image.asset(
+                    'assets/images/BUTTERFLY 3 GIF.gif',
+                    width: 300,
+                    height: 300,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
         ],
       ),
     );
