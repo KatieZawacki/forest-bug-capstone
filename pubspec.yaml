@@ -69,6 +69,8 @@ flutter:
     - assets/cutscene/
     - assets/images/
     - assets/train/
+    - assets/images/NOTEBOOK 1.png
+    - assets/images/NOTEBOOK 2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

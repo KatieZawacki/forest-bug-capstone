@@ -152,12 +152,68 @@ class _CottageScreenState extends State<CottageScreen> {
               errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey),
             ),
           ),
+          // Desk 1 image on the right edge, top layer, 300x300
+          // Desk 1 image and Make a Goal button above it
+          // Desk 1 image and Make a Goal button above it (button is top layer)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: SizedBox(
+              width: 1300,
+              height: 1300,
+              child: Stack(
+                children: [
+                  // Desk image (bottom layer)
+                  Positioned.fill(
+                    child: Image.asset(
+                      'assets/images/DESK 1.png',
+                      fit: BoxFit.contain,
+                      alignment: Alignment.topRight,
+                      errorBuilder: (context, error, stackTrace) => Container(width: 1300, height: 1300, color: Colors.brown),
+                    ),
+                  ),
+                  // Make a Goal button at the top center of the desk (top layer)
+                  Positioned(
+                    top: 30,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/goal-setup');
+                        },
+                        child: const Text('Make a Goal'),
+                      ),
+                    ),
+                    ),
+                    // Notebook image under the Make a Goal button (top layer, over desk)
+                    Positioned(
+                      top: 35, // 15px higher
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: SizedBox(
+                          width: 200,
+                          height: 200,
+                          child: Image.asset(
+                            'assets/images/NOTEBOOK 1.png',
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) => Container(width: 200, height: 200, color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+
           // Main content column (centered)
-          Center(
+          Align(
+            alignment: const FractionalOffset(0.5, 0.95),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 16),
                 const Text(
                   'It already feels like home.',
                   style: TextStyle(fontSize: 22, color: Colors.brown),
@@ -166,29 +222,13 @@ class _CottageScreenState extends State<CottageScreen> {
                 const SizedBox(height: 40),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/goal-setup');
-                      },
-                      child: const Text('Make a Goal'),
-                    ),
-                    const SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pushNamed(context, '/garden-transition');
                       },
                       child: const Text('Explore the Forest'),
-                    ),
-                    const SizedBox(width: 20),
-                    // Debug button to reset pet selection
-                    ElevatedButton(
-                      onPressed: _resetPetSelection,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text('Reset Pet Selection'),
                     ),
                   ],
                 ),
@@ -201,7 +241,7 @@ class _CottageScreenState extends State<CottageScreen> {
             bottom: 32,
             child: SizedBox(
               width: 300,
-              height: 300,
+              height: 350,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -245,6 +285,23 @@ class _CottageScreenState extends State<CottageScreen> {
                         );
                       },
                     ),
+                  // Reset Pet Selection button under the cat
+                  Positioned(
+                    bottom: 0,
+                    child: Center(
+                      child: ElevatedButton(
+                        onPressed: _resetPetSelection,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                          minimumSize: Size(0, 0),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: const Text('Reset Pet Selection'),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
