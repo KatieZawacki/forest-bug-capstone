@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:flutter/services.dart';
+import 'dart:io' show exit, Platform;
 import 'package:provider/provider.dart';
 
 import '../providers/pet_provider.dart';
@@ -39,6 +42,7 @@ class _CottageScreenState extends State<CottageScreen> {
     }
   }
 
+  // Ensure _resetPetSelection is defined before use
   Future<void> _resetPetSelection() async {
     debugPrint('CottageScreen: _resetPetSelection called');
     final prefs = await SharedPreferences.getInstance();
@@ -135,7 +139,9 @@ class _CottageScreenState extends State<CottageScreen> {
   Widget build(BuildContext context) {
     debugPrint('CottageScreen: build START');
     final petProvider = Provider.of<PetProvider>(context);
-    debugPrint('CottageScreen: got petProvider, pets length = \\${petProvider.pets.length}');
+    debugPrint(
+      'CottageScreen: got petProvider, pets length = \\${petProvider.pets.length}',
+    );
     final pet = petProvider.pets.isNotEmpty ? petProvider.pets.first : null;
     debugPrint('CottageScreen: build END');
     return Scaffold(
@@ -145,11 +151,51 @@ class _CottageScreenState extends State<CottageScreen> {
       ),
       body: Stack(
         children: [
+          // Topmost human bed image (500x500)
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Image.asset(
+              'assets/images/BED 1.png',
+              width: 500,
+              height: 500,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.bed, size: 100),
+            ),
+          ),
+                    // 'End for the Day' button in the bottom right corner (on top of the bed)
+                    Positioned(
+                      bottom: 32,
+                      right: 32,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueGrey,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                        ),
+                        onPressed: () async {
+                          // Save progress logic (if any additional needed)
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setBool('progress_saved', true);
+                          // Optionally, call setState or other save logic here
+                          // Quit the app
+                          Future.delayed(const Duration(milliseconds: 300), () {
+                            // Use SystemNavigator.pop() to quit the app
+                            // (import 'package:flutter/services.dart'; required)
+                            // ignore: use_build_context_synchronously
+                            Navigator.of(context).popUntil((route) => route.isFirst);
+                          });
+                        },
+                        child: const Text('End for the Day'),
+                      ),
+                    ),
           Positioned.fill(
             child: Image.asset(
               'assets/images/COTTAGE FLOOR 1.png',
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey),
+              errorBuilder: (context, error, stackTrace) =>
+                  Container(color: Colors.grey),
             ),
           ),
           // Desk 1 image on the right edge, top layer, 300x300
@@ -157,7 +203,7 @@ class _CottageScreenState extends State<CottageScreen> {
           // Desk 1 image and Make a Goal button above it (button is top layer)
           Positioned(
             top: 0,
-            right: 0,
+            right: -150,
             child: SizedBox(
               width: 1300,
               height: 1300,
@@ -169,7 +215,11 @@ class _CottageScreenState extends State<CottageScreen> {
                       'assets/images/DESK 1.png',
                       fit: BoxFit.contain,
                       alignment: Alignment.topRight,
-                      errorBuilder: (context, error, stackTrace) => Container(width: 1300, height: 1300, color: Colors.brown),
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        width: 1300,
+                        height: 1300,
+                        color: Colors.brown,
+                      ),
                     ),
                   ),
                   // Make a Goal button at the top center of the desk (top layer)
@@ -185,62 +235,68 @@ class _CottageScreenState extends State<CottageScreen> {
                         child: const Text('Make a Goal'),
                       ),
                     ),
+                  ),
+                  // Notebook image under the Make a Goal button (top layer, over desk)
+                  Positioned(
+                    top: 35, // 15px higher
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: SizedBox(
+                        width: 200,
+                        height: 200,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/goal-setup');
+                          },
+                          child: Image.asset(
+                            'assets/images/NOTEBOOK 1.png',
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                                  width: 200,
+                                  height: 200,
+                                  color: Colors.grey,
+                                ),
+                          ),
+                        ),
+                      ),
                     ),
-                   // Notebook image under the Make a Goal button (top layer, over desk)
-                   Positioned(
-                     top: 35, // 15px higher
-                     left: 0,
-                     right: 0,
-                     child: Center(
-                       child: SizedBox(
-                         width: 200,
-                         height: 200,
-                         child: GestureDetector(
-                           onTap: () {
-                             Navigator.pushNamed(context, '/goal-setup');
-                           },
-                           child: Image.asset(
-                             'assets/images/NOTEBOOK 1.png',
-                             fit: BoxFit.contain,
-                             errorBuilder: (context, error, stackTrace) => Container(width: 200, height: 200, color: Colors.grey),
-                           ),
-                         ),
-                       ),
-                     ),
-                   ),
+                  ),
                 ],
               ),
             ),
           ),
 
-          // Main content column (centered)
-          Align(
-            alignment: const FractionalOffset(0.5, 0.95),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'It already feels like home.',
-                  style: TextStyle(fontSize: 22, color: Colors.brown),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/garden-transition');
-                      },
-                      child: const Text('Explore the Forest'),
-                    ),
-                  ],
-                ),
-              ],
+          // Main text in the top left corner
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'It already feels like home.',
+                style: TextStyle(fontSize: 22, color: Colors.brown),
+                textAlign: TextAlign.left,
+              ),
             ),
           ),
-          // Bed and pet in bottom right
+
+          // 'Explore the Forest' button in the top right corner
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/garden-transition');
+                },
+                child: const Text('Explore the Forest'),
+              ),
+            ),
+          ),
+          // Pet bed and pet in bottom right
           Positioned(
             right: 32,
             bottom: 32,
@@ -255,7 +311,8 @@ class _CottageScreenState extends State<CottageScreen> {
                     width: 300,
                     height: 300,
                     fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.bed, size: 100),
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.bed, size: 100),
                   ),
                   if (pet != null)
                     Builder(
@@ -283,7 +340,8 @@ class _CottageScreenState extends State<CottageScreen> {
                                 width: 300,
                                 height: 300,
                                 fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.pets, size: 100),
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.pets, size: 100),
                               ),
                             ),
                           ),
@@ -293,25 +351,104 @@ class _CottageScreenState extends State<CottageScreen> {
                   // Reset Pet Selection button under the cat
                   Positioned(
                     bottom: 0,
-                    child: Center(
-                      child: ElevatedButton(
-                        onPressed: _resetPetSelection,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                          minimumSize: Size(0, 0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    left: 0,
+                    right: 0,
+                    child: ElevatedButton(
+                      onPressed: _resetPetSelection,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 8,
                         ),
-                        child: const Text('Reset Pet Selection'),
+                        minimumSize: Size(0, 0),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
+                      child: const Text('Reset Pet Selection'),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-        ],
+        // Human bed image floating in the center
+        Positioned.fill(
+          child: IgnorePointer(
+            child: Center(
+                child: Transform.translate(
+                  offset: const Offset(-400, 150),
+                  child: Transform.rotate(
+                    angle: -1.5707963267948966, // -90 degrees in radians (counterclockwise)
+                    child: SizedBox(
+                      width: 900,
+                      height: 900,
+                      child: Image.asset(
+                        'assets/images/BED 1.png',
+                        width: 900,
+                        height: 900,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.bed, size: 100),
+                      ),
+                    ),
+                  ),
+                ),
+            ),
+          ),
+        ),
+        // 'End for the Day' button in the bottom right corner (always on top)
+        Positioned(
+          bottom: 132,
+          right: 882,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFe8f5e9), // light green
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                elevation: 0,
+              ),
+              onPressed: () async {
+                final shouldQuit = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('End for the Day'),
+                    content: const Text('Are you sure you want to save and quit?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: const Text('Yes, Quit'),
+                      ),
+                    ],
+                  ),
+                );
+                if (shouldQuit == true) {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setBool('progress_saved', true);
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    if (Platform.isAndroid || Platform.isIOS) {
+                      SystemNavigator.pop();
+                    } else {
+                      exit(0);
+                    }
+                  });
+                }
+              },
+              child: const Text('End for the Day'),
+            ),
+          ),
+        ),
+      ],
       ),
     );
   }
