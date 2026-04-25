@@ -12,6 +12,8 @@ class GardenTransitionScreen extends StatefulWidget {
 }
 
 class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
+      // Hidden state for each butterfly (7 butterflies)
+      List<bool> butterflyHidden = List.filled(7, true);
     // Bee animation state
     late final List<Offset> _dirtPileRelativePositions;
     late final Ticker _beeTicker;
@@ -327,98 +329,98 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               ],
             ),
           ),
-          // Butterfly GIF (top left) - moved to top layer
-          // Butterfly GIF (moved to first dirt pile)
-          Positioned(
-            left: dirtPileRelativePositions[0].dx * screenWidth - 150,
-            bottom: dirtPileRelativePositions[0].dy * screenHeight - 150,
-            child: IgnorePointer(
-              child: Image.asset(
-                'assets/images/BUTTERFLY 1 GIF.gif',
-                width: 300,
-                height: 300,
-                fit: BoxFit.contain,
+          // Butterfly GIFs (conditionally rendered based on hidden state)
+          if (!butterflyHidden[0])
+            Positioned(
+              left: dirtPileRelativePositions[0].dx * screenWidth - 150,
+              bottom: dirtPileRelativePositions[0].dy * screenHeight - 150,
+              child: IgnorePointer(
+                child: Image.asset(
+                  'assets/images/BUTTERFLY 1 GIF.gif',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-          ),
-          // Butterfly 2 GIF (second dirt pile)
-          Positioned(
-            left: dirtPileRelativePositions[1].dx * screenWidth - 150,
-            bottom: dirtPileRelativePositions[1].dy * screenHeight - 150,
-            child: IgnorePointer(
-              child: Image.asset(
-                'assets/images/BUTTERFLY 2 GIF.gif',
-                width: 300,
-                height: 300,
-                fit: BoxFit.contain,
+          if (!butterflyHidden[1])
+            Positioned(
+              left: dirtPileRelativePositions[1].dx * screenWidth - 150,
+              bottom: dirtPileRelativePositions[1].dy * screenHeight - 150,
+              child: IgnorePointer(
+                child: Image.asset(
+                  'assets/images/BUTTERFLY 2 GIF.gif',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
-          ),
-              // Butterfly 3 GIF (third dirt pile, always shown on its pile)
-              Positioned(
-                left: dirtPileRelativePositions[2].dx * screenWidth - 150,
-                bottom: dirtPileRelativePositions[2].dy * screenHeight - 150,
-                child: IgnorePointer(
-                  child: Image.asset(
-                    'assets/images/BUTTERFLY 3 GIF.gif',
-                    width: 300,
-                    height: 300,
-                    fit: BoxFit.contain,
-                  ),
+          if (!butterflyHidden[2])
+            Positioned(
+              left: dirtPileRelativePositions[2].dx * screenWidth - 150,
+              bottom: dirtPileRelativePositions[2].dy * screenHeight - 150,
+              child: IgnorePointer(
+                child: Image.asset(
+                  'assets/images/BUTTERFLY 3 GIF.gif',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
                 ),
               ),
-              // Butterfly 4 GIF (fourth dirt pile, not already occupied)
-              Positioned(
-                left: dirtPileRelativePositions[3].dx * screenWidth - 150,
-                bottom: dirtPileRelativePositions[3].dy * screenHeight - 150,
-                child: IgnorePointer(
-                  child: Image.asset(
-                    'assets/images/BUTTERFLY 4 GIF.gif',
-                    width: 300,
-                    height: 300,
-                    fit: BoxFit.contain,
-                  ),
+            ),
+          if (!butterflyHidden[3])
+            Positioned(
+              left: dirtPileRelativePositions[3].dx * screenWidth - 150,
+              bottom: dirtPileRelativePositions[3].dy * screenHeight - 150,
+              child: IgnorePointer(
+                child: Image.asset(
+                  'assets/images/BUTTERFLY 4 GIF.gif',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
                 ),
               ),
-              // Butterfly 5 GIF (fifth dirt pile, not already occupied)
-              Positioned(
-                left: dirtPileRelativePositions[4].dx * screenWidth - 150,
-                bottom: dirtPileRelativePositions[4].dy * screenHeight - 150,
-                child: IgnorePointer(
-                  child: Image.asset(
-                    'assets/images/BUTTERFLY 5 GIF.gif',
-                    width: 300,
-                    height: 300,
-                    fit: BoxFit.contain,
-                  ),
+            ),
+          if (!butterflyHidden[4])
+            Positioned(
+              left: dirtPileRelativePositions[4].dx * screenWidth - 150,
+              bottom: dirtPileRelativePositions[4].dy * screenHeight - 150,
+              child: IgnorePointer(
+                child: Image.asset(
+                  'assets/images/BUTTERFLY 5 GIF.gif',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
                 ),
               ),
-              // Butterfly 6 GIF (sixth dirt pile, not already occupied)
-              Positioned(
-                left: dirtPileRelativePositions[5].dx * screenWidth - 150,
-                bottom: dirtPileRelativePositions[5].dy * screenHeight - 150,
-                child: IgnorePointer(
-                  child: Image.asset(
-                    'assets/images/BUTTERFLY 6 GIF.gif',
-                    width: 300,
-                    height: 300,
-                    fit: BoxFit.contain,
-                  ),
+            ),
+          if (!butterflyHidden[5])
+            Positioned(
+              left: dirtPileRelativePositions[5].dx * screenWidth - 150,
+              bottom: dirtPileRelativePositions[5].dy * screenHeight - 150,
+              child: IgnorePointer(
+                child: Image.asset(
+                  'assets/images/BUTTERFLY 6 GIF.gif',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
                 ),
               ),
-              // Butterfly 7 GIF (seventh dirt pile, not already occupied)
-              Positioned(
-                left: dirtPileRelativePositions[6].dx * screenWidth - 150,
-                bottom: dirtPileRelativePositions[6].dy * screenHeight - 150,
-                child: IgnorePointer(
-                  child: Image.asset(
-                    'assets/images/BUTTERFLY 7 GIF.gif',
-                    width: 300,
-                    height: 300,
-                    fit: BoxFit.contain,
-                  ),
+            ),
+          if (!butterflyHidden[6])
+            Positioned(
+              left: dirtPileRelativePositions[6].dx * screenWidth - 150,
+              bottom: dirtPileRelativePositions[6].dy * screenHeight - 150,
+              child: IgnorePointer(
+                child: Image.asset(
+                  'assets/images/BUTTERFLY 7 GIF.gif',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
                 ),
               ),
+            ),
 
               // Animated Bee GIF hopping from pile to pile (always on top, matches butterfly positions)
               // Bee follows a figure 8 (lemniscate) path
