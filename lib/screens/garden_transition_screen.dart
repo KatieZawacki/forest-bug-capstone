@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'forest_screen.dart';
 import 'ticker.dart';
+import 'dart:math' as math;
 
 class GardenTransitionScreen extends StatefulWidget {
   const GardenTransitionScreen({super.key});
@@ -12,12 +13,10 @@ class GardenTransitionScreen extends StatefulWidget {
 
 class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
     // Bee animation state
-    int _beePileIndex = 0;
     late final List<Offset> _dirtPileRelativePositions;
     late final Ticker _beeTicker;
-    bool _beeInitialized = false;
-    // For custom bee path: 1-2-3-4-5-6-5-4-3-2-1-2-3...
-    late final List<int> _beePath;
+    // For figure 8 path
+    double _beeFigure8T = 0.0;
 
     @override
     void initState() {
@@ -32,23 +31,19 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
         const Offset(0.84, 0.44),
         const Offset(0.92, 0.75),
       ];
-      // Use all 8 piles for bee path: 1-2-3-4-5-6-7-8-7-6-5-4-3-2-1-2...
-      _beePath = [0,1,2,3,4,5,6,7,6,5,4,3,2,1];
       _beeTicker = Ticker(_onBeeTick)..start();
     }
 
     void _onBeeTick(Duration elapsed) {
       if (!mounted) return;
-      // 5 seconds per step, bee always visible, just pauses longer at each pile
-      final int totalStepMs = 5000;
-      final int step = (elapsed.inMilliseconds ~/ totalStepMs) % _beePath.length;
-      final int nextIndex = _beePath[step];
-      if (_beePileIndex != nextIndex || !_beeInitialized) {
-        setState(() {
-          _beePileIndex = nextIndex;
-          _beeInitialized = true;
-        });
-      }
+      // Animate bee along a figure 8 (lemniscate) path
+      // One full loop every 8 seconds
+      final double seconds = elapsed.inMilliseconds / 1000.0;
+      final double period = 8.0; // seconds for a full loop
+      final double t = (seconds % period) / period * 2 * math.pi;
+      setState(() {
+        _beeFigure8T = t;
+      });
     }
 
     @override
@@ -426,19 +421,31 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               ),
 
               // Animated Bee GIF hopping from pile to pile (always on top, matches butterfly positions)
-              AnimatedPositioned(
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeInOut,
-                left: dirtPileRelativePositions[_beePileIndex].dx * screenWidth - 50, // moved right 100px total
-                bottom: dirtPileRelativePositions[_beePileIndex].dy * screenHeight - 50, // moved up 100px total
-                child: IgnorePointer(
-                  child: Image.asset(
-                    'assets/images/BEE GIF.gif',
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.contain,
-                  ),
-                ),
+              // Bee follows a figure 8 (lemniscate) path
+              Builder(
+                builder: (context) {
+                  // Center of the screen, shifted higher
+                  final double cx = screenWidth / 2;
+                  final double cy = screenHeight * 0.33;
+                  // Radii for the figure 8
+                  final double rx = screenWidth * 0.32;
+                  final double ry = screenHeight * 0.22;
+                  // Lemniscate of Gerono: x = rx * sin(t), y = ry * sin(t) * cos(t)
+                  final double x = cx + rx * math.sin(_beeFigure8T);
+                  final double y = cy + ry * math.sin(_beeFigure8T) * math.cos(_beeFigure8T);
+                  return Positioned(
+                    left: x - 50,
+                    top: y - 50,
+                    child: IgnorePointer(
+                      child: Image.asset(
+                        'assets/images/BEE GIF.gif',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
       ),
