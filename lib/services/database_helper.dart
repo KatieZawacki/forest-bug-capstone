@@ -1,11 +1,15 @@
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'dart:io';
 import 'package:path/path.dart';
 import '../models/goal.dart';
 import '../models/check_in.dart';
 import '../models/bug_stage.dart';
 import '../models/forest_progress.dart';
+import '../models/butterfly_unlock.dart';
 
 class DatabaseHelper {
+  static bool _ffiInitialized = false;
+    static const String butterflyUnlocksTable = 'butterflyUnlocks';
   static const String _dbName = 'forest_bug.db';
   static const int _version = 1;
 
@@ -22,6 +26,11 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDB() async {
+        // Initialize sqflite_common_ffi for desktop platforms
+        if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) && !_ffiInitialized) {
+          databaseFactory = databaseFactoryFfi;
+          _ffiInitialized = true;
+        }
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, _dbName);
 
@@ -68,6 +77,32 @@ class DatabaseHelper {
         lastUpdated TEXT NOT NULL
       )
     ''');
+
+    await db.execute('''
+      CREATE TABLE $butterflyUnlocksTable(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        imagePath TEXT NOT NULL,
+        unlockedAt TEXT NOT NULL,
+        goalDurationDays INTEGER NOT NULL,
+        isLegendary INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+  }
+  // Butterfly Unlocks
+  Future<int> insertButterflyUnlock(ButterflyUnlock unlock) async {
+    final db = await database;
+    return db.insert(butterflyUnlocksTable, unlock.toMap());
+  }
+
+  Future<List<ButterflyUnlock>> getButterflyUnlocks() async {
+    final db = await database;
+    final result = await db.query(butterflyUnlocksTable);
+    return result.map((map) => ButterflyUnlock.fromMap(map)).toList();
+  }
+
+  Future<int> deleteButterflyUnlock(int id) async {
+    final db = await database;
+    return db.delete(butterflyUnlocksTable, where: 'id = ?', whereArgs: [id]);
   }
 
   // Goals

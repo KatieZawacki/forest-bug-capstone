@@ -92,8 +92,10 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                           const SizedBox(height: 8),
                           TextField(
                             controller: _titleController,
+                            minLines: 2,
+                            maxLines: 3,
                             decoration: InputDecoration(
-                              hintText: 'e.g., Read 30 minutes daily',
+                              hintText: 'e.g., Be sober for 24 hours, drink 8 cups of water per day, or maybe read for 30 minutes every day',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -109,7 +111,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                             controller: _whyController,
                             maxLines: 3,
                             decoration: InputDecoration(
-                              hintText: 'Explain your motivation...',
+                              hintText: 'If you completed this goal, what would that mean to you?',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),
@@ -125,7 +127,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                             value: _durationDays,
                             isExpanded: true,
                             items: [
-                              for (final days in [1, 2, 3, 4, 5, 6, 7, 14, 21, 28, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 365])
+                              for (final days in [1, 2, 3, 4, 5, 6, 7, 14, 21, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 365])
                                 DropdownMenuItem(
                                   value: days,
                                   child: Text(_durationLabel(days)),
@@ -168,7 +170,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
     if (days < 7) return '$days days';
     if (days == 7) return '1 week';
     if (days % 7 == 0 && days < 28) return '${days ~/ 7} weeks';
-    if (days == 28) return '4 weeks (about 1 month)';
+    // Removed 4 weeks (about 1 month) label
     if (days == 30) return '1 month';
     if (days == 60) return '2 months';
     if (days == 90) return '3 months';

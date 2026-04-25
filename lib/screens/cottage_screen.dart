@@ -148,6 +148,17 @@ class _CottageScreenState extends State<CottageScreen> {
       appBar: AppBar(
         title: const Text('Cottage'),
         backgroundColor: Colors.black,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/home');
+            },
+            child: const Text(
+              'Menu',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -164,32 +175,6 @@ class _CottageScreenState extends State<CottageScreen> {
                   const Icon(Icons.bed, size: 100),
             ),
           ),
-                    // 'End for the Day' button in the bottom right corner (on top of the bed)
-                    Positioned(
-                      bottom: 32,
-                      right: 32,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueGrey,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                        ),
-                        onPressed: () async {
-                          // Save progress logic (if any additional needed)
-                          final prefs = await SharedPreferences.getInstance();
-                          await prefs.setBool('progress_saved', true);
-                          // Optionally, call setState or other save logic here
-                          // Quit the app
-                          Future.delayed(const Duration(milliseconds: 300), () {
-                            // Use SystemNavigator.pop() to quit the app
-                            // (import 'package:flutter/services.dart'; required)
-                            // ignore: use_build_context_synchronously
-                            Navigator.of(context).popUntil((route) => route.isFirst);
-                          });
-                        },
-                        child: const Text('End for the Day'),
-                      ),
-                    ),
           Positioned.fill(
             child: Image.asset(
               'assets/images/COTTAGE FLOOR 1.png',
@@ -400,7 +385,7 @@ class _CottageScreenState extends State<CottageScreen> {
         // 'End for the Day' button in the bottom right corner (always on top)
         Positioned(
           bottom: 132,
-          right: 882,
+          left: 180,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(

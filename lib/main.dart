@@ -11,6 +11,7 @@ import 'screens/cottage_screen.dart';
 import 'screens/forest_screen.dart';
 import 'screens/garden_transition_screen.dart';
 import 'screens/pet_list_screen_route.dart';
+import 'screens/cottage_wall_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/pet_provider.dart';
 
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         '/goal-setup': (context) => const GoalSetupScreen(),
         '/check-in': (context) => const CheckInScreen(),
         '/cottage': (context) => const CottageScreen(),
+        '/cottage-wall': (context) => const CottageWallScreen(),
         // '/garden': (context) => const GardenScreen(),
         '/forest': (context) => const ForestScreen(),
         '/garden-transition': (context) => const GardenTransitionScreen(),

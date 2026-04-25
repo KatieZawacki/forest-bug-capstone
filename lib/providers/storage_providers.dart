@@ -4,6 +4,26 @@ import '../models/goal.dart';
 import '../models/check_in.dart';
 import '../models/bug_stage.dart';
 import '../models/forest_progress.dart';
+import '../models/butterfly_unlock.dart';
+// Butterfly Unlocks
+final butterflyUnlocksProvider = FutureProvider<List<ButterflyUnlock>>((ref) async {
+  final db = ref.watch(databaseProvider);
+  return db.getButterflyUnlocks();
+});
+
+final addButterflyUnlockProvider = FutureProvider.family<void, ButterflyUnlock>((ref, unlock) async {
+  final db = ref.watch(databaseProvider);
+  await db.insertButterflyUnlock(unlock);
+  // Invalidate butterfly unlocks to refresh the list
+  final _ = ref.refresh(butterflyUnlocksProvider);
+});
+
+final deleteButterflyUnlockProvider = FutureProvider.family<void, int>((ref, id) async {
+  final db = ref.watch(databaseProvider);
+  await db.deleteButterflyUnlock(id);
+  final _ = ref.refresh(butterflyUnlocksProvider);
+});
+
 
 // Database provider
 final databaseProvider = Provider<DatabaseHelper>((ref) {
