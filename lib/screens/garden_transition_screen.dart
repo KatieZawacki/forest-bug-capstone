@@ -1,6 +1,7 @@
           // Butterfly 3 GIF (third dirt pile) - placed in Stack children
 import 'package:flutter/material.dart';
 import 'forest_screen.dart';
+import 'ticker.dart';
 
 class GardenTransitionScreen extends StatefulWidget {
   const GardenTransitionScreen({super.key});
@@ -10,6 +11,51 @@ class GardenTransitionScreen extends StatefulWidget {
 }
 
 class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
+    // Bee animation state
+    int _beePileIndex = 0;
+    late final List<Offset> _dirtPileRelativePositions;
+    late final Ticker _beeTicker;
+    bool _beeInitialized = false;
+    // For custom bee path: 1-2-3-4-5-6-5-4-3-2-1-2-3...
+    late final List<int> _beePath;
+
+    @override
+    void initState() {
+      super.initState();
+      _dirtPileRelativePositions = [
+        const Offset(0.08, 0.44),
+        const Offset(0.22, 0.75),
+        const Offset(0.36, 0.44),
+        const Offset(0.48, 0.75),
+        const Offset(0.61, 0.44),
+        const Offset(0.72, 0.75),
+        const Offset(0.84, 0.44),
+        const Offset(0.92, 0.75),
+      ];
+      // Use all 8 piles for bee path: 1-2-3-4-5-6-7-8-7-6-5-4-3-2-1-2...
+      _beePath = [0,1,2,3,4,5,6,7,6,5,4,3,2,1];
+      _beeTicker = Ticker(_onBeeTick)..start();
+    }
+
+    void _onBeeTick(Duration elapsed) {
+      if (!mounted) return;
+      // 5 seconds per step, bee always visible, just pauses longer at each pile
+      final int totalStepMs = 5000;
+      final int step = (elapsed.inMilliseconds ~/ totalStepMs) % _beePath.length;
+      final int nextIndex = _beePath[step];
+      if (_beePileIndex != nextIndex || !_beeInitialized) {
+        setState(() {
+          _beePileIndex = nextIndex;
+          _beeInitialized = true;
+        });
+      }
+    }
+
+    @override
+    void dispose() {
+      _beeTicker.dispose();
+      super.dispose();
+    }
   // ...existing code...
   // Each pile can be: empty, sprout, or a flower image
   // We'll use a list of objects to track state for each pile
@@ -63,16 +109,7 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Offset> dirtPileRelativePositions = [
-      const Offset(0.08, 0.44),
-      const Offset(0.22, 0.75),
-      const Offset(0.36, 0.44),
-      const Offset(0.48, 0.75),
-      const Offset(0.61, 0.44),
-      const Offset(0.72, 0.75),
-      const Offset(0.84, 0.44),
-      const Offset(0.92, 0.75),
-    ];
+    final dirtPileRelativePositions = _dirtPileRelativePositions;
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -387,7 +424,23 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                   ),
                 ),
               ),
-        ],
+
+              // Animated Bee GIF hopping from pile to pile (always on top, matches butterfly positions)
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeInOut,
+                left: dirtPileRelativePositions[_beePileIndex].dx * screenWidth - 50, // moved right 100px total
+                bottom: dirtPileRelativePositions[_beePileIndex].dy * screenHeight - 50, // moved up 100px total
+                child: IgnorePointer(
+                  child: Image.asset(
+                    'assets/images/BEE GIF.gif',
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ],
       ),
     );
   }

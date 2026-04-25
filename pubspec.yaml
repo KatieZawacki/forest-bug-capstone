@@ -73,6 +73,9 @@ flutter:
     - assets/images/NOTEBOOK 2.png
     - assets/images/BED 1.png
 
+    # Add bee GIF asset
+    - assets/images/BEE GIF.gif
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
