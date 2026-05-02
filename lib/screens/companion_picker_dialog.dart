@@ -75,6 +75,12 @@ class _CompanionPickerDialogState extends State<CompanionPickerDialog> {
       'image': 'assets/images/CAT 5.png',
       'state': 'sit',
     },
+    {
+      'type': 'Cat',
+      'name': 'Cat 6',
+      'image': 'assets/images/CAT 6.png',
+      'state': 'sit',
+    },
   ];
 
   @override

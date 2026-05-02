@@ -105,6 +105,11 @@ class _CottageScreenState extends State<CottageScreen> {
       'stage1': 'assets/images/CAT 5 STAGE 1.png',
       'stage2': 'assets/images/CAT 5.png', // Use main image for stage2 if not available
     },
+    'Cat 6': {
+      'sit': 'assets/images/CAT 6.png',
+      'stage1': 'assets/images/CAT 6 STAGE 1.png',
+      'stage2': 'assets/images/CAT 6 STAGE 2.png',
+    },
     'Cat 2': {
       'sit': 'assets/images/CAT 2.png',
       'stage1': 'assets/images/CAT 2 STAGE 1.png',
