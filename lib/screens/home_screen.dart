@@ -220,10 +220,10 @@ class HomeScreen extends ConsumerWidget {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/forest');
+                      Navigator.pushNamed(context, '/cottage');
                     },
-                    icon: const Icon(Icons.forest),
-                    label: const Text('Explore the Forest'),
+                    icon: const Icon(Icons.home),
+                    label: const Text('Go to Cottage'),
                   ),
                 ),
               ],
