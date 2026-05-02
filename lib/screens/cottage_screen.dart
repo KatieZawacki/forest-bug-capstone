@@ -31,6 +31,7 @@ class _CottageScreenState extends State<CottageScreen> {
     if (!picked && mounted) {
       await Future.delayed(Duration.zero); // Ensure context is ready
       debugPrint('CottageScreen: showing CompanionPickerDialog');
+      if (!mounted) return;
       await showDialog(
         context: context,
         barrierDismissible: false,
@@ -52,18 +53,19 @@ class _CottageScreenState extends State<CottageScreen> {
     for (final pet in pets) {
       await petProvider.removePet(pet.id);
     }
+    if (!mounted) return;
     setState(() {});
     // Show the companion picker dialog after reset
-    if (mounted) {
-      debugPrint('CottageScreen: showing CompanionPickerDialog (reset)');
-      await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => CompanionPickerDialog(),
-      );
-      debugPrint('CottageScreen: dialog closed (reset)');
-      await prefs.setBool('picked_companion', true);
-    }
+    if (!mounted) return;
+    debugPrint('CottageScreen: showing CompanionPickerDialog (reset)');
+    if (!mounted) return;
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => CompanionPickerDialog(),
+    );
+    debugPrint('CottageScreen: dialog closed (reset)');
+    await prefs.setBool('picked_companion', true);
   }
 
   // List of possible states and their corresponding images for each pet type

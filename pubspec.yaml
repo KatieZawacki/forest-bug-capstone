@@ -75,6 +75,11 @@ flutter:
     - assets/images/BED 1.png
 
     # Add bee GIF asset
+
+    # Add butterfly eggs asset
+    - assets/images/BUTTERFLY EGGS.png
+    - assets/images/BUTTERFLY PUPA.png
+    - assets/images/BUTTERFLY CATERPILLAR.png
     - assets/images/BEE GIF.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see

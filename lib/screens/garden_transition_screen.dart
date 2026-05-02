@@ -12,8 +12,19 @@ class GardenTransitionScreen extends StatefulWidget {
 }
 
 class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
-      // Hidden state for each butterfly (7 butterflies)
-      List<bool> butterflyHidden = List.filled(7, true);
+  // Hidden state for each butterfly (7 butterflies)
+  List<bool> butterflyHidden = List.filled(7, true);
+  // Life stages for egg, caterpillar, pupa
+  final List<Map<String, dynamic>> butterflyStages = [
+    {"state": "egg"},
+    {"state": "caterpillar"},
+    {"state": "pupa"},
+  ];
+  final List<Offset> butterflyStagePositions = const [
+    Offset(0.08, 0.18), // egg (left)
+    Offset(0.5, 0.18),  // caterpillar (center)
+    Offset(0.92, 0.18), // pupa (right)
+  ];
     // Bee animation state
     late final List<Offset> _dirtPileRelativePositions;
     late final Ticker _beeTicker;
@@ -107,7 +118,6 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
   @override
   Widget build(BuildContext context) {
     final dirtPileRelativePositions = _dirtPileRelativePositions;
-
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final now = DateTime.now();
@@ -120,6 +130,84 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
       ),
       body: Stack(
         children: [
+          // Garden background image (always at the bottom)
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/garden background.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Butterfly life stages (egg, caterpillar, pupa) using dirt pile logic
+          if (butterflyStages.length == butterflyStagePositions.length)
+            ...List.generate(butterflyStages.length, (i) {
+              final stage = butterflyStages[i]["state"];
+              final pos = butterflyStagePositions[i];
+              String image;
+              switch (stage) {
+                case "egg":
+                  image = 'assets/images/BUTTERFLY EGGS.png';
+                  break;
+                case "caterpillar":
+                  image = 'assets/images/BUTTERFLY CATERPILLAR.png';
+                  break;
+                case "pupa":
+                  image = 'assets/images/BUTTERFLY PUPA.png';
+                  break;
+                default:
+                  image = '';
+              }
+              debugPrint('Rendering butterfly stage: $stage at $pos with image $image');
+              return Positioned(
+                left: pos.dx * screenWidth - 150,
+                top: pos.dy * screenHeight - 150,
+                child: i == 0
+                    ? Transform.rotate(
+                        angle: 0.785398, // 45 degrees in radians
+                        child: Image.asset(
+                          image,
+                          width: 300,
+                          height: 300,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 70, color: Colors.red),
+                        ),
+                      )
+                    : i == 1
+                      ? Transform.translate(
+                        offset: const Offset(-205, -30),
+                            child: Transform.rotate(
+                              angle: 1.5708, // 90 degrees in radians
+                              child: Image.asset(
+                                image,
+                                width: 300,
+                                height: 300,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 70, color: Colors.red),
+                              ),
+                            ),
+                          )
+                        : i == 2
+                          ? Transform.translate(
+                            offset: const Offset(-435, -80),
+                                child: Image.asset(
+                                  image,
+                                  width: 300,
+                                  height: 300,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 70, color: Colors.red),
+                                ),
+                              )
+                            : Image.asset(
+                                image,
+                                width: 300,
+                                height: 300,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 70, color: Colors.red),
+                              ),
+              );
+            })
+          else
+            const SizedBox.shrink(),
+          // ...existing code...
           // Seed inventory display (top right)
           Positioned(
             top: 16,
@@ -127,7 +215,7 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.8),
+                color: const Color.fromRGBO(255, 255, 255, 0.8),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.green, width: 2),
               ),
@@ -139,13 +227,6 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                   Text('Seeds: $seedCount', style: const TextStyle(fontSize: 18, color: Colors.green)),
                 ],
               ),
-            ),
-          ),
-          // Garden background image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/garden background.png',
-              fit: BoxFit.cover,
             ),
           ),
 
