@@ -293,7 +293,7 @@ class _CottageScreenState extends State<CottageScreen> {
                 onPressed: () {
                   Navigator.pushNamed(context, '/garden-transition');
                 },
-                child: const Text('Go to the Garden'),
+                child: const Text('Go to Garden'),
               ),
             ),
           // End of garden button Positioned

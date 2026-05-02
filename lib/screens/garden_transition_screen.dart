@@ -1,5 +1,6 @@
           // Butterfly 3 GIF (third dirt pile) - placed in Stack children
 import 'package:flutter/material.dart';
+import 'forest_screen.dart';
 import 'ticker.dart';
 import 'dart:math' as math;
 import '../models/goal.dart';
@@ -164,7 +165,7 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
     debugPrint('GardenTransitionScreen: build with _goals length = \\${_goals.length}');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('On the Path'),
+        title: const Text('Garden'),
         backgroundColor: Colors.black,
       ),
       body: Stack(
@@ -399,20 +400,7 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
             );
           }),
 
-          // Go Back button (bottom left)
-          Positioned(
-            left: 16,
-            bottom: 16,
-            child: ElevatedButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-              label: const Text('Go Back'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black.withAlpha((0.7 * 255).toInt()),
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ),
+          // ...Go Back button removed...
 
           // Main content (moved to 10% from the bottom)
           Positioned(
@@ -438,72 +426,6 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               ],
             ),
           ),
-          // Butterfly GIFs (conditionally rendered based on hidden state)
-          if (!butterflyHidden[0])
-            Positioned(
-              left: dirtPileRelativePositions[0].dx * screenWidth - 150,
-              bottom: dirtPileRelativePositions[0].dy * screenHeight - 150,
-              child: IgnorePointer(
-                child: Image.asset(
-                  'assets/images/BUTTERFLY 1 GIF.gif',
-                  width: 300,
-                  height: 300,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          if (!butterflyHidden[1])
-            Positioned(
-              left: dirtPileRelativePositions[1].dx * screenWidth - 150,
-              bottom: dirtPileRelativePositions[1].dy * screenHeight - 150,
-              child: IgnorePointer(
-                child: Image.asset(
-                  'assets/images/BUTTERFLY 2 GIF.gif',
-                  width: 300,
-                  height: 300,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          if (!butterflyHidden[2])
-            Positioned(
-              left: dirtPileRelativePositions[2].dx * screenWidth - 150,
-              bottom: dirtPileRelativePositions[2].dy * screenHeight - 150,
-              child: IgnorePointer(
-                child: Image.asset(
-                  'assets/images/BUTTERFLY 3 GIF.gif',
-                  width: 300,
-                  height: 300,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          if (!butterflyHidden[3])
-            Positioned(
-              left: dirtPileRelativePositions[3].dx * screenWidth - 150,
-              bottom: dirtPileRelativePositions[3].dy * screenHeight - 150,
-              child: IgnorePointer(
-                child: Image.asset(
-                  'assets/images/BUTTERFLY 4 GIF.gif',
-                  width: 300,
-                  height: 300,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          if (!butterflyHidden[4])
-            Positioned(
-              left: dirtPileRelativePositions[4].dx * screenWidth - 150,
-              bottom: dirtPileRelativePositions[4].dy * screenHeight - 150,
-              child: IgnorePointer(
-                child: Image.asset(
-                  'assets/images/BUTTERFLY 5 GIF.gif',
-                  width: 300,
-                  height: 300,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
           if (!butterflyHidden[5])
             Positioned(
               left: dirtPileRelativePositions[5].dx * screenWidth - 150,
@@ -559,6 +481,24 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                 },
               ),
             ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ForestScreen(),
+            ),
+          );
+          if (result == true) {
+            setState(() {
+              seedCount = seedCount + 1;
+            });
+          }
+        },
+        icon: const Icon(Icons.forest),
+        label: const Text('Explore Forest'),
+        backgroundColor: Colors.green,
       ),
     );
   }

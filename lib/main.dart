@@ -38,6 +38,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          foregroundColor: Colors.white, // Text and icon color
+          iconTheme: IconThemeData(color: Colors.white),
+          actionsIconTheme: IconThemeData(color: Colors.white),
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
+        ),
       ),
       initialRoute: '/onboarding',
       routes: {
