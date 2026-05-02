@@ -40,6 +40,12 @@ class _CompanionPickerDialogState extends State<CompanionPickerDialog> {
       'state': 'sit',
     },
     {
+      'type': 'Dog',
+      'name': 'Dog 5',
+      'image': 'assets/images/DOG 5.png',
+      'state': 'sit',
+    },
+    {
       'type': 'Cat',
       'name': 'Cat 1',
       'image': 'assets/images/CAT 1.png',
