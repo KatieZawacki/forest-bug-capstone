@@ -105,6 +105,12 @@ class _CottageScreenState extends State<CottageScreen> {
       'stage1': 'assets/images/CAT 3 STAGE 1.png',
       'stage2': 'assets/images/CAT 3 STAGE 2.png',
     },
+    'Cat 4': {
+      'sit': 'assets/images/CAT 4.png',
+      // Add stage images if available, otherwise just use the main image
+      'stage1': 'assets/images/CAT 4.png',
+      'stage2': 'assets/images/CAT 4.png',
+    },
   };
 
   // 45% chance to change pet state when leaving cottage
