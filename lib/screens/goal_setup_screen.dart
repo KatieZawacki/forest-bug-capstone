@@ -14,6 +14,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   late TextEditingController _titleController;
   late TextEditingController _whyController;
   int _durationDays = 1;
+  String _frequency = 'daily';
 
   @override
   void initState() {
@@ -39,8 +40,10 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
 
     final goal = Goal(
       title: _titleController.text,
-      description: 'Why: ${_whyController.text}\nDuration: $_durationDays days',
+      description: 'Why: ${_whyController.text}',
       createdAt: DateTime.now(),
+      durationDays: _durationDays,
+      frequency: _frequency,
     );
 
     final db = ref.read(databaseProvider);
@@ -136,6 +139,26 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                             onChanged: (value) {
                               if (value != null) {
                                 setState(() => _durationDays = value);
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Frequency',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          DropdownButton<String>(
+                            value: _frequency,
+                            isExpanded: true,
+                            items: const [
+                              DropdownMenuItem(value: 'daily', child: Text('Daily')),
+                              DropdownMenuItem(value: 'weekly', child: Text('Weekly')),
+                              DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
+                            ],
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() => _frequency = value);
                               }
                             },
                           ),

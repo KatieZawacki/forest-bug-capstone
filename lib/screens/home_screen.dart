@@ -83,6 +83,8 @@ class HomeScreen extends ConsumerWidget {
                               description: activeGoal.description,
                               isCompleted: value,
                               createdAt: activeGoal.createdAt,
+                              durationDays: activeGoal.durationDays,
+                              frequency: activeGoal.frequency,
                             );
                             await db.updateGoal(updatedGoal);
                             // ignore: unused_result

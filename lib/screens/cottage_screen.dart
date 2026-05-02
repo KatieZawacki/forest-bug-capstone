@@ -277,11 +277,26 @@ class _CottageScreenState extends State<CottageScreen> {
               padding: const EdgeInsets.all(16.0),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/garden-transition');
+                  Navigator.pushNamed(context, '/forest');
                 },
                 child: const Text('Explore the Forest'),
               ),
             ),
+          ),
+          // 'Go to the Garden' button below 'Explore the Forest'
+          Positioned(
+            top: 60,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/garden-transition');
+                },
+                child: const Text('Go to the Garden'),
+              ),
+            ),
+          // End of garden button Positioned
           ),
           // Pet bed and pet in bottom right
           Positioned(

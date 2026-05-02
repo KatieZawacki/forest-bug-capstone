@@ -5,6 +5,7 @@ class ForestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('ForestScreen: build START');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forest'),
@@ -12,11 +13,18 @@ class ForestScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
+          // Colored background for debug
+          Container(color: Colors.lightGreenAccent),
+          Builder(builder: (context) { print('ForestScreen: Stack children building'); return const SizedBox.shrink(); }),
           // Forest background image
           Positioned.fill(
             child: Image.asset(
               'assets/images/forest background.png',
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                print('ForestScreen: forest background image failed to load');
+                return const Icon(Icons.error, size: 70, color: Colors.red);
+              },
             ),
           ),
           // Large bare tree image slightly above bottom center, double size
@@ -31,6 +39,10 @@ class ForestScreen extends StatelessWidget {
                 'assets/images/bare tree.png',
                 fit: BoxFit.fitHeight,
                 width: 1200,
+                errorBuilder: (context, error, stackTrace) {
+                  print('ForestScreen: bare tree image failed to load');
+                  return const Icon(Icons.error, size: 70, color: Colors.red);
+                },
               ),
             ),
           ),
@@ -45,6 +57,10 @@ class ForestScreen extends StatelessWidget {
                 'assets/images/bare tree 2.png',
                 fit: BoxFit.fitHeight,
                 width: 1200,
+                errorBuilder: (context, error, stackTrace) {
+                  print('ForestScreen: bare tree 2 image failed to load');
+                  return const Icon(Icons.error, size: 70, color: Colors.red);
+                },
               ),
             ),
           ),
@@ -59,6 +75,10 @@ class ForestScreen extends StatelessWidget {
                 'assets/images/PINE TREE.png',
                 fit: BoxFit.fitHeight,
                 width: 1200,
+                errorBuilder: (context, error, stackTrace) {
+                  print('ForestScreen: pine tree image failed to load');
+                  return const Icon(Icons.error, size: 70, color: Colors.red);
+                },
               ),
             ),
           ),
@@ -76,6 +96,10 @@ class ForestScreen extends StatelessWidget {
                 'assets/images/SEED.png',
                 width: 80,
                 height: 80,
+                errorBuilder: (context, error, stackTrace) {
+                  print('ForestScreen: seed image failed to load');
+                  return const Icon(Icons.error, size: 40, color: Colors.red);
+                },
               ),
             ),
           ),
@@ -94,20 +118,6 @@ class ForestScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 22, color: Colors.green),
                   textAlign: TextAlign.center,
                 ),
-              ),
-            ),
-          ),
-          // Go Back button (bottom left)
-          Positioned(
-            left: 16,
-            bottom: 16,
-            child: ElevatedButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-              label: const Text('Go Back'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black.withAlpha((0.7 * 255).toInt()),
-                foregroundColor: Colors.white,
               ),
             ),
           ),

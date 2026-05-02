@@ -48,7 +48,9 @@ class DatabaseHelper {
         title TEXT NOT NULL,
         description TEXT NOT NULL,
         isCompleted INTEGER NOT NULL DEFAULT 0,
-        createdAt TEXT NOT NULL
+        createdAt TEXT NOT NULL,
+        durationDays INTEGER NOT NULL,
+        frequency TEXT NOT NULL
       )
     ''');
 

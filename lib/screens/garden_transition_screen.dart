@@ -1,8 +1,9 @@
           // Butterfly 3 GIF (third dirt pile) - placed in Stack children
 import 'package:flutter/material.dart';
-import 'forest_screen.dart';
 import 'ticker.dart';
 import 'dart:math' as math;
+import '../models/goal.dart';
+import '../services/database_helper.dart';
 
 class GardenTransitionScreen extends StatefulWidget {
   const GardenTransitionScreen({super.key});
@@ -12,58 +13,87 @@ class GardenTransitionScreen extends StatefulWidget {
 }
 
 class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
-  // Hidden state for each butterfly (7 butterflies)
-  List<bool> butterflyHidden = List.filled(7, true);
-  // Life stages for egg, caterpillar, pupa
-  final List<Map<String, dynamic>> butterflyStages = [
-    {"state": "egg"},
-    {"state": "caterpillar"},
-    {"state": "pupa"},
-  ];
+  // List of active goals
+  List<Goal> _goals = [];
+  bool _loadingGoals = true;
   final List<Offset> butterflyStagePositions = const [
     Offset(0.08, 0.18), // egg (left)
     Offset(0.5, 0.18),  // caterpillar (center)
     Offset(0.92, 0.18), // pupa (right)
   ];
-    // Bee animation state
-    late final List<Offset> _dirtPileRelativePositions;
-    late final Ticker _beeTicker;
-    // For figure 8 path
-    double _beeFigure8T = 0.0;
+  // Bee animation state
+  late final List<Offset> _dirtPileRelativePositions;
+  late final Ticker _beeTicker;
+  // For figure 8 path
+  double _beeFigure8T = 0.0;
 
-    @override
-    void initState() {
-      super.initState();
-      _dirtPileRelativePositions = [
-        const Offset(0.08, 0.44),
-        const Offset(0.22, 0.75),
-        const Offset(0.36, 0.44),
-        const Offset(0.48, 0.75),
-        const Offset(0.61, 0.44),
-        const Offset(0.72, 0.75),
-        const Offset(0.84, 0.44),
-        const Offset(0.92, 0.75),
-      ];
-      _beeTicker = Ticker(_onBeeTick)..start();
-    }
+  @override
+  void initState() {
+    super.initState();
+    _dirtPileRelativePositions = [
+      const Offset(0.08, 0.44),
+      const Offset(0.22, 0.75),
+      const Offset(0.36, 0.44),
+      const Offset(0.48, 0.75),
+      const Offset(0.61, 0.44),
+      const Offset(0.72, 0.75),
+      const Offset(0.84, 0.44),
+      const Offset(0.92, 0.75),
+    ];
+    _beeTicker = Ticker(_onBeeTick)..start();
+    _loadGoals();
+  }
 
-    void _onBeeTick(Duration elapsed) {
-      if (!mounted) return;
-      // Animate bee along a figure 8 (lemniscate) path
-      // One full loop every 8 seconds
-      final double seconds = elapsed.inMilliseconds / 1000.0;
-      final double period = 8.0; // seconds for a full loop
-      final double t = (seconds % period) / period * 2 * math.pi;
-      setState(() {
-        _beeFigure8T = t;
+  Future<void> _loadGoals() async {
+    debugPrint('GardenTransitionScreen: _loadGoals called');
+    final db = DatabaseHelper();
+    debugPrint('GardenTransitionScreen: calling db.getGoals()');
+    try {
+      // Add a timeout to catch hangs
+      final goalsFuture = db.getGoals();
+      final goals = await goalsFuture.timeout(const Duration(seconds: 5), onTimeout: () {
+        debugPrint('GardenTransitionScreen: db.getGoals() timed out!');
+        throw Exception('db.getGoals() timed out');
       });
+      debugPrint('GardenTransitionScreen: db.getGoals() returned with \\${goals.length} goals');
+      if (mounted) {
+        setState(() {
+          _goals = goals;
+          _loadingGoals = false;
+        });
+        debugPrint('GardenTransitionScreen: setState called, _loadingGoals=false');
+      }
+    } catch (e, st) {
+      debugPrint('GardenTransitionScreen: ERROR in _loadGoals: \\${e.toString()}');
+      debugPrint('GardenTransitionScreen: STACKTRACE: \\${st.toString()}');
+      if (mounted) {
+        setState(() {
+          _goals = [];
+          _loadingGoals = false;
+        });
+      }
     }
+  }
 
-    @override
-    void dispose() {
-      _beeTicker.dispose();
-      super.dispose();
-    }
+  void _onBeeTick(Duration elapsed) {
+    if (!mounted) return;
+    final double seconds = elapsed.inMilliseconds / 1000.0;
+    final double period = 8.0;
+    final double t = (seconds % period) / period * 2 * math.pi;
+    setState(() {
+      _beeFigure8T = t;
+    });
+  }
+
+  @override
+  void dispose() {
+    _beeTicker.dispose();
+    super.dispose();
+  }
+
+  // ...existing code continues...
+
+    // ...existing code...
   // ...existing code...
   // Each pile can be: empty, sprout, or a flower image
   // We'll use a list of objects to track state for each pile
@@ -123,6 +153,15 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
     final now = DateTime.now();
     // Check for weeds on build
     updateWeedsForEmptyPiles();
+    // Define butterflyHidden for demo (all visible)
+    final List<bool> butterflyHidden = List.filled(8, false);
+    if (_loadingGoals) {
+      debugPrint('GardenTransitionScreen: still loading goals...');
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    debugPrint('GardenTransitionScreen: build with _goals length = \\${_goals.length}');
     return Scaffold(
       appBar: AppBar(
         title: const Text('On the Path'),
@@ -137,11 +176,47 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
               fit: BoxFit.cover,
             ),
           ),
-          // Butterfly life stages (egg, caterpillar, pupa) using dirt pile logic
-          if (butterflyStages.length == butterflyStagePositions.length)
-            ...List.generate(butterflyStages.length, (i) {
-              final stage = butterflyStages[i]["state"];
-              final pos = butterflyStagePositions[i];
+          // Render a butterfly for each goal
+          ..._goals.asMap().entries.map((entry) {
+            final i = entry.key;
+            final goal = entry.value;
+            final stage = goal.getCurrentButterflyStage(now);
+            final rarity = goal.getButterflyRarity();
+            final pos = Offset(0.08 + i * 0.13, 0.18); // Spread out horizontally
+            if (stage == 'butterfly') {
+              // Show butterfly GIF based on rarity (example: 1-3=common, 4-5=rare, 6-7=ultra rare, 8=legendary)
+              String gifAsset;
+              switch (rarity) {
+                case 'common':
+                  gifAsset = 'assets/images/BUTTERFLY 1 GIF.gif';
+                  break;
+                case 'uncommon':
+                  gifAsset = 'assets/images/BUTTERFLY 2 GIF.gif';
+                  break;
+                case 'rare':
+                  gifAsset = 'assets/images/BUTTERFLY 3 GIF.gif';
+                  break;
+                case 'ultra rare':
+                  gifAsset = 'assets/images/BUTTERFLY 4 GIF.gif';
+                  break;
+                case 'legendary':
+                  gifAsset = 'assets/images/BUTTERFLY 5 GIF.gif';
+                  break;
+                default:
+                  gifAsset = 'assets/images/BUTTERFLY 1 GIF.gif';
+              }
+              return Positioned(
+                left: pos.dx * screenWidth - 150,
+                top: pos.dy * screenHeight - 150,
+                child: Image.asset(
+                  gifAsset,
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 70, color: Colors.red),
+                ),
+              );
+            } else {
               String image;
               switch (stage) {
                 case "egg":
@@ -156,57 +231,28 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                 default:
                   image = '';
               }
-              debugPrint('Rendering butterfly stage: $stage at $pos with image $image');
+              Widget imgWidget = Image.asset(
+                image,
+                width: 300,
+                height: 300,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 70, color: Colors.red),
+              );
+              // Optionally, add rotation/translation for style
+              if (stage == 'egg') {
+                imgWidget = Transform.rotate(angle: 0.785398, child: imgWidget);
+              } else if (stage == 'caterpillar') {
+                imgWidget = Transform.translate(offset: const Offset(-205, -30), child: Transform.rotate(angle: 1.5708, child: imgWidget));
+              } else if (stage == 'pupa') {
+                imgWidget = Transform.translate(offset: const Offset(-435, -80), child: imgWidget);
+              }
               return Positioned(
                 left: pos.dx * screenWidth - 150,
                 top: pos.dy * screenHeight - 150,
-                child: i == 0
-                    ? Transform.rotate(
-                        angle: 0.785398, // 45 degrees in radians
-                        child: Image.asset(
-                          image,
-                          width: 300,
-                          height: 300,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 70, color: Colors.red),
-                        ),
-                      )
-                    : i == 1
-                      ? Transform.translate(
-                        offset: const Offset(-205, -30),
-                            child: Transform.rotate(
-                              angle: 1.5708, // 90 degrees in radians
-                              child: Image.asset(
-                                image,
-                                width: 300,
-                                height: 300,
-                                fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 70, color: Colors.red),
-                              ),
-                            ),
-                          )
-                        : i == 2
-                          ? Transform.translate(
-                            offset: const Offset(-435, -80),
-                                child: Image.asset(
-                                  image,
-                                  width: 300,
-                                  height: 300,
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 70, color: Colors.red),
-                                ),
-                              )
-                            : Image.asset(
-                                image,
-                                width: 300,
-                                height: 300,
-                                fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 70, color: Colors.red),
-                              ),
+                child: imgWidget,
               );
-            })
-          else
-            const SizedBox.shrink(),
+            }
+          }),
           // ...existing code...
           // Seed inventory display (top right)
           Positioned(
@@ -389,24 +435,6 @@ class _GardenTransitionScreenState extends State<GardenTransitionScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  onPressed: () async {
-                    // Go to forest screen and wait for result
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ForestScreen(),
-                      ),
-                    );
-                    if (result == true) {
-                      setState(() {
-                        seedCount = seedCount + 1;
-                      });
-                    }
-                  },
-                  icon: const Icon(Icons.arrow_forward),
-                  label: const Text('Keep Going'),
-                ),
               ],
             ),
           ),
