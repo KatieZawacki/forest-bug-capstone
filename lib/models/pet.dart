@@ -17,10 +17,16 @@ class Pet extends HiveObject {
   int level;
 
   @HiveField(4)
+  int levelPoints;
+
+  @HiveField(5)
+  int friendship;
+
+  @HiveField(6)
   String imagePath;
 
   /// New field for pet state (sit, lay, stand, etc)
-  @HiveField(5)
+  @HiveField(7)
   String state;
 
   Pet({
@@ -28,6 +34,8 @@ class Pet extends HiveObject {
     required this.name,
     required this.type,
     required this.level,
+    this.levelPoints = 0,
+    this.friendship = 0,
     required this.imagePath,
     this.state = 'sit',
   });

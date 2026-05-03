@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/storage_providers.dart';
@@ -22,6 +24,23 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (kDebugMode)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  onPressed: () async {
+                    final box = await Hive.openBox<Goal>('goals');
+                    await box.clear();
+                    ref.invalidate(goalsProvider);
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('All goals reset!')),
+                    );
+                  },
+                  child: const Text('Reset Goals (Debug Only)'),
+                ),
+              ),
             // Pets Button
             Row(
               children: [
@@ -51,7 +70,7 @@ class HomeScreen extends ConsumerWidget {
                       padding: const EdgeInsets.all(16.0),
                       child: Center(
                         child: Text(
-                          'No goals yet. Create one to get started!',
+                          'No goals yet. What is something you would like to achieve?',
                           style: TextStyle(color: Colors.grey[600]),
                         ),
                       ),

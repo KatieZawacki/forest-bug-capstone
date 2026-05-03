@@ -21,15 +21,17 @@ class PetAdapter extends TypeAdapter<Pet> {
       name: fields[1] as String,
       type: fields[2] as String,
       level: fields[3] as int,
-      imagePath: fields[4] as String,
-      state: fields[5] as String,
+      levelPoints: fields[4] as int,
+      friendship: fields[5] as int,
+      imagePath: fields[6] as String,
+      state: fields[7] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Pet obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -39,8 +41,12 @@ class PetAdapter extends TypeAdapter<Pet> {
       ..writeByte(3)
       ..write(obj.level)
       ..writeByte(4)
-      ..write(obj.imagePath)
+      ..write(obj.levelPoints)
       ..writeByte(5)
+      ..write(obj.friendship)
+      ..writeByte(6)
+      ..write(obj.imagePath)
+      ..writeByte(7)
       ..write(obj.state);
   }
 
