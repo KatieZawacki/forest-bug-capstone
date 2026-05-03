@@ -1,6 +1,13 @@
-class CheckIn {
+import 'package:hive/hive.dart';
+part 'check_in.g.dart';
+
+@HiveType(typeId: 2)
+class CheckIn extends HiveObject {
+  @HiveField(0)
   final int? id;
+  @HiveField(1)
   final String notes;
+  @HiveField(2)
   final DateTime timestamp;
 
   CheckIn({

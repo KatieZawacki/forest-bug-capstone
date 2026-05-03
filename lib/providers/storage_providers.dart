@@ -51,7 +51,8 @@ final bugStageProvider = FutureProvider<BugStage?>((ref) async {
 // Forest Progress
 final forestProgressProvider = FutureProvider<ForestProgress?>((ref) async {
   final db = ref.watch(databaseProvider);
-  return db.getForestProgress();
+  final list = await db.getForestProgress();
+  return list.isNotEmpty ? list.first : null;
 });
 
 // Add goal notifier
@@ -73,8 +74,8 @@ final addCheckInProvider = FutureProvider.family<void, CheckIn>((ref, checkIn) a
 // Update bug stage notifier
 final updateBugStageProvider = FutureProvider.family<void, BugStage>((ref, bugStage) async {
   final db = ref.watch(databaseProvider);
-  if (bugStage.id != null) {
-    await db.updateBugStage(bugStage);
+  if (bugStage.key != null) {
+    await db.updateBugStage(bugStage.key as int, bugStage);
   } else {
     await db.insertBugStage(bugStage);
   }
@@ -85,8 +86,8 @@ final updateBugStageProvider = FutureProvider.family<void, BugStage>((ref, bugSt
 // Update forest progress notifier
 final updateForestProgressProvider = FutureProvider.family<void, ForestProgress>((ref, progress) async {
   final db = ref.watch(databaseProvider);
-  if (progress.id != null) {
-    await db.updateForestProgress(progress);
+  if (progress.key != null) {
+    await db.updateForestProgress(progress.key as int, progress);
   } else {
     await db.insertForestProgress(progress);
   }

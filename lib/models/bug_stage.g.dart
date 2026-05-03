@@ -1,47 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pet.dart';
+part of 'bug_stage.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PetAdapter extends TypeAdapter<Pet> {
+class BugStageAdapter extends TypeAdapter<BugStage> {
   @override
-  final int typeId = 0;
+  final int typeId = 3;
 
   @override
-  Pet read(BinaryReader reader) {
+  BugStage read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Pet(
-      id: fields[0] as String,
-      name: fields[1] as String,
-      type: fields[2] as String,
-      level: fields[3] as int,
-      imagePath: fields[4] as String,
-      state: fields[5] as String,
+    return BugStage(
+      id: fields[0] as int?,
+      stage: fields[1] as String,
+      progressPoints: fields[2] as int,
+      updatedAt: fields[3] as DateTime,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Pet obj) {
+  void write(BinaryWriter writer, BugStage obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.stage)
       ..writeByte(2)
-      ..write(obj.type)
+      ..write(obj.progressPoints)
       ..writeByte(3)
-      ..write(obj.level)
-      ..writeByte(4)
-      ..write(obj.imagePath)
-      ..writeByte(5)
-      ..write(obj.state);
+      ..write(obj.updatedAt);
   }
 
   @override
@@ -50,7 +44,7 @@ class PetAdapter extends TypeAdapter<Pet> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PetAdapter &&
+      other is BugStageAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -1,47 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pet.dart';
+part of 'check_in.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PetAdapter extends TypeAdapter<Pet> {
+class CheckInAdapter extends TypeAdapter<CheckIn> {
   @override
-  final int typeId = 0;
+  final int typeId = 2;
 
   @override
-  Pet read(BinaryReader reader) {
+  CheckIn read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Pet(
-      id: fields[0] as String,
-      name: fields[1] as String,
-      type: fields[2] as String,
-      level: fields[3] as int,
-      imagePath: fields[4] as String,
-      state: fields[5] as String,
+    return CheckIn(
+      id: fields[0] as int?,
+      notes: fields[1] as String,
+      timestamp: fields[2] as DateTime,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Pet obj) {
+  void write(BinaryWriter writer, CheckIn obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.notes)
       ..writeByte(2)
-      ..write(obj.type)
-      ..writeByte(3)
-      ..write(obj.level)
-      ..writeByte(4)
-      ..write(obj.imagePath)
-      ..writeByte(5)
-      ..write(obj.state);
+      ..write(obj.timestamp);
   }
 
   @override
@@ -50,7 +41,7 @@ class PetAdapter extends TypeAdapter<Pet> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PetAdapter &&
+      other is CheckInAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

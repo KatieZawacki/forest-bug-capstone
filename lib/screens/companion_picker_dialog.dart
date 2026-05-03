@@ -129,18 +129,44 @@ class _CompanionPickerDialogState extends State<CompanionPickerDialog> {
                             debugPrint(
                               'CompanionPickerDialog: Companion tapped: \\${companion['name']} \\${companion['state']}',
                             );
-                            final pet = Pet(
-                              id: Random().nextInt(1000000).toString(),
-                              name: companion['name']!,
-                              type: companion['type']!,
-                              level: 1,
-                              imagePath: companion['image']!,
-                              state: companion['state']!,
+                            String? customName = await showDialog<String>(
+                              context: context,
+                              builder: (context) {
+                                String tempName = '';
+                                return AlertDialog(
+                                  title: const Text('Name your companion'),
+                                  content: TextField(
+                                    autofocus: true,
+                                    decoration: const InputDecoration(hintText: 'Enter a name'),
+                                    onChanged: (value) => tempName = value,
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(tempName),
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
-                            await context.read<PetProvider>().addPet(pet);
-                            debugPrint('CompanionPickerDialog: Pet added, popping dialog');
-                            if (context.mounted) {
-                              Navigator.of(context).pop();
+                            if (customName != null && customName.trim().isNotEmpty) {
+                              final pet = Pet(
+                                id: Random().nextInt(1000000).toString(),
+                                name: customName.trim(),
+                                type: companion['type']!,
+                                level: 1,
+                                imagePath: companion['image']!,
+                                state: companion['state']!,
+                              );
+                              await context.read<PetProvider>().addPet(pet);
+                              debugPrint('CompanionPickerDialog: Pet added, popping dialog');
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
                             }
                           },
                           child: ClipRRect(

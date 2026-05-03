@@ -1,6 +1,4 @@
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'dart:io';
-import 'package:path/path.dart';
+import 'package:hive/hive.dart';
 import '../models/goal.dart';
 import '../models/check_in.dart';
 import '../models/bug_stage.dart';
@@ -8,205 +6,108 @@ import '../models/forest_progress.dart';
 import '../models/butterfly_unlock.dart';
 
 class DatabaseHelper {
-  static bool _ffiInitialized = false;
-    static const String butterflyUnlocksTable = 'butterflyUnlocks';
-  static const String _dbName = 'forest_bug.db';
-  static const int _version = 1;
+    // Update BugStage
+    Future<void> updateBugStage(int key, BugStage bugStage) async {
+      final box = await Hive.openBox<BugStage>(bugStagesBox);
+      await box.put(key, bugStage);
+    }
 
-  static const String goalsTable = 'goals';
-  static const String checkInsTable = 'checkIns';
-  static const String bugStageTable = 'bugStage';
-  static const String forestProgressTable = 'forestProgress';
+    // Update ForestProgress
+    Future<void> updateForestProgress(int key, ForestProgress progress) async {
+      final box = await Hive.openBox<ForestProgress>(forestProgressBox);
+      await box.put(key, progress);
+    }
+  // Hive box names
+  static const String goalsBox = 'goals';
+  static const String checkInsBox = 'checkIns';
+  static const String bugStagesBox = 'bugStages';
+  static const String forestProgressBox = 'forestProgress';
+  static const String butterflyUnlocksBox = 'butterflyUnlocks';
 
-  static Database? _database;
-
-  Future<Database> get database async {
-    _database ??= await _initDB();
-    return _database!;
-  }
-
-  Future<Database> _initDB() async {
-        // Initialize sqflite_common_ffi for desktop platforms
-        if ((Platform.isWindows || Platform.isLinux || Platform.isMacOS) && !_ffiInitialized) {
-          databaseFactory = databaseFactoryFfi;
-          _ffiInitialized = true;
-        }
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, _dbName);
-
-    return openDatabase(
-      path,
-      version: _version,
-      onCreate: _createDB,
-    );
-  }
-
-  Future<void> _createDB(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE $goalsTable(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        description TEXT NOT NULL,
-        isCompleted INTEGER NOT NULL DEFAULT 0,
-        createdAt TEXT NOT NULL,
-        durationDays INTEGER NOT NULL,
-        frequency TEXT NOT NULL
-      )
-    ''');
-
-    await db.execute('''
-      CREATE TABLE $checkInsTable(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        notes TEXT NOT NULL,
-        timestamp TEXT NOT NULL
-      )
-    ''');
-
-    await db.execute('''
-      CREATE TABLE $bugStageTable(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        stage TEXT NOT NULL,
-        progressPoints INTEGER NOT NULL,
-        updatedAt TEXT NOT NULL
-      )
-    ''');
-
-    await db.execute('''
-      CREATE TABLE $forestProgressTable(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        totalTrees INTEGER NOT NULL,
-        treesCultivated INTEGER NOT NULL,
-        lastUpdated TEXT NOT NULL
-      )
-    ''');
-
-    await db.execute('''
-      CREATE TABLE $butterflyUnlocksTable(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        imagePath TEXT NOT NULL,
-        unlockedAt TEXT NOT NULL,
-        goalDurationDays INTEGER NOT NULL,
-        isLegendary INTEGER NOT NULL DEFAULT 0
-      )
-    ''');
-  }
   // Butterfly Unlocks
-  Future<int> insertButterflyUnlock(ButterflyUnlock unlock) async {
-    final db = await database;
-    return db.insert(butterflyUnlocksTable, unlock.toMap());
+  Future<void> insertButterflyUnlock(ButterflyUnlock unlock) async {
+    final box = await Hive.openBox<ButterflyUnlock>(butterflyUnlocksBox);
+    await box.add(unlock);
   }
 
   Future<List<ButterflyUnlock>> getButterflyUnlocks() async {
-    final db = await database;
-    final result = await db.query(butterflyUnlocksTable);
-    return result.map((map) => ButterflyUnlock.fromMap(map)).toList();
+    final box = await Hive.openBox<ButterflyUnlock>(butterflyUnlocksBox);
+    return box.values.toList();
   }
 
-  Future<int> deleteButterflyUnlock(int id) async {
-    final db = await database;
-    return db.delete(butterflyUnlocksTable, where: 'id = ?', whereArgs: [id]);
+  Future<void> deleteButterflyUnlock(int key) async {
+    final box = await Hive.openBox<ButterflyUnlock>(butterflyUnlocksBox);
+    await box.delete(key);
   }
 
   // Goals
-  Future<int> insertGoal(Goal goal) async {
-    final db = await database;
-    return db.insert(goalsTable, goal.toMap());
+  Future<void> insertGoal(Goal goal) async {
+    final box = await Hive.openBox<Goal>(goalsBox);
+    await box.add(goal);
   }
 
   Future<List<Goal>> getGoals() async {
-    final db = await database;
-    final result = await db.query(goalsTable);
-    return result.map((map) => Goal.fromMap(map)).toList();
+    final box = await Hive.openBox<Goal>(goalsBox);
+    return box.values.toList();
   }
 
-  Future<int> updateGoal(Goal goal) async {
-    final db = await database;
-    return db.update(
-      goalsTable,
-      goal.toMap(),
-      where: 'id = ?',
-      whereArgs: [goal.id],
-    );
-  }
-
-  Future<int> deleteGoal(int id) async {
-    final db = await database;
-    return db.delete(goalsTable, where: 'id = ?', whereArgs: [id]);
-  }
-
-  // Check-ins
-  Future<int> insertCheckIn(CheckIn checkIn) async {
-    final db = await database;
-    return db.insert(checkInsTable, checkIn.toMap());
+  // CheckIns
+  Future<void> insertCheckIn(CheckIn checkIn) async {
+    final box = await Hive.openBox<CheckIn>(checkInsBox);
+    await box.add(checkIn);
   }
 
   Future<List<CheckIn>> getCheckIns() async {
-    final db = await database;
-    final result = await db.query(checkInsTable, orderBy: 'timestamp DESC');
-    return result.map((map) => CheckIn.fromMap(map)).toList();
+    final box = await Hive.openBox<CheckIn>(checkInsBox);
+    return box.values.toList();
   }
 
-  Future<int> deleteCheckIn(int id) async {
-    final db = await database;
-    return db.delete(checkInsTable, where: 'id = ?', whereArgs: [id]);
+  // BugStages
+  Future<void> insertBugStage(BugStage bugStage) async {
+    final box = await Hive.openBox<BugStage>(bugStagesBox);
+    await box.add(bugStage);
   }
 
-  // Bug Stage
-  Future<int> insertBugStage(BugStage bugStage) async {
-    final db = await database;
-    return db.insert(bugStageTable, bugStage.toMap());
+  Future<List<BugStage>> getBugStages() async {
+    final box = await Hive.openBox<BugStage>(bugStagesBox);
+    return box.values.toList();
   }
 
+  // ForestProgress
+  Future<void> insertForestProgress(ForestProgress progress) async {
+    final box = await Hive.openBox<ForestProgress>(forestProgressBox);
+    await box.add(progress);
+  }
+
+  Future<List<ForestProgress>> getForestProgress() async {
+    final box = await Hive.openBox<ForestProgress>(forestProgressBox);
+    return box.values.toList();
+  }
+
+  // Update Goal
+  Future<void> updateGoal(int key, Goal goal) async {
+    final box = await Hive.openBox<Goal>(goalsBox);
+    await box.put(key, goal);
+  }
+
+  Future<void> deleteGoal(int key) async {
+    final box = await Hive.openBox<Goal>(goalsBox);
+    await box.delete(key);
+  }
+
+  // Delete CheckIn
+  Future<void> deleteCheckIn(int key) async {
+    final box = await Hive.openBox<CheckIn>(checkInsBox);
+    await box.delete(key);
+  }
+
+  // Get Latest BugStage
   Future<BugStage?> getLatestBugStage() async {
-    final db = await database;
-    final result = await db.query(
-      bugStageTable,
-      orderBy: 'updatedAt DESC',
-      limit: 1,
-    );
-    if (result.isNotEmpty) {
-      return BugStage.fromMap(result.first);
-    }
-    return null;
-  }
-
-  Future<int> updateBugStage(BugStage bugStage) async {
-    final db = await database;
-    return db.update(
-      bugStageTable,
-      bugStage.toMap(),
-      where: 'id = ?',
-      whereArgs: [bugStage.id],
-    );
-  }
-
-  // Forest Progress
-  Future<int> insertForestProgress(ForestProgress progress) async {
-    final db = await database;
-    return db.insert(forestProgressTable, progress.toMap());
-  }
-
-  Future<ForestProgress?> getForestProgress() async {
-    final db = await database;
-    final result = await db.query(forestProgressTable, limit: 1);
-    if (result.isNotEmpty) {
-      return ForestProgress.fromMap(result.first);
-    }
-    return null;
-  }
-
-  Future<int> updateForestProgress(ForestProgress progress) async {
-    final db = await database;
-    return db.update(
-      forestProgressTable,
-      progress.toMap(),
-      where: 'id = ?',
-      whereArgs: [progress.id],
-    );
-  }
-
-  Future<void> close() async {
-    final db = await database;
-    db.close();
+    final box = await Hive.openBox<BugStage>(bugStagesBox);
+    if (box.isEmpty) return null;
+    // Assuming BugStage has a DateTime field called updatedAt
+    final bugStages = box.values.toList();
+    bugStages.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    return bugStages.first;
   }
 }

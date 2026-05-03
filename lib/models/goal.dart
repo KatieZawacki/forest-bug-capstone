@@ -1,10 +1,21 @@
-class Goal {
+import 'package:hive/hive.dart';
+part 'goal.g.dart';
+
+@HiveType(typeId: 1)
+class Goal extends HiveObject {
+  @HiveField(0)
   final int? id;
+  @HiveField(1)
   final String title;
+  @HiveField(2)
   final String description;
+  @HiveField(3)
   final bool isCompleted;
+  @HiveField(4)
   final DateTime createdAt;
+  @HiveField(5)
   final int durationDays; // Total duration of the goal in days
+  @HiveField(6)
   final String frequency; // e.g., 'daily', 'weekly', etc.
 
   Goal({

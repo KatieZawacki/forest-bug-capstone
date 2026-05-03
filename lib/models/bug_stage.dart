@@ -1,7 +1,15 @@
-class BugStage {
+import 'package:hive/hive.dart';
+part 'bug_stage.g.dart';
+
+@HiveType(typeId: 3)
+class BugStage extends HiveObject {
+  @HiveField(0)
   final int? id;
+  @HiveField(1)
   final String stage; // e.g., "caterpillar", "cocoon", "butterfly"
+  @HiveField(2)
   final int progressPoints;
+  @HiveField(3)
   final DateTime updatedAt;
 
   BugStage({

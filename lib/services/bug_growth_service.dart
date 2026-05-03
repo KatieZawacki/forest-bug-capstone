@@ -11,11 +11,16 @@ class BugGrowthService {
   }) async {
     var bugStage = await db.getLatestBugStage();
 
+    // Only create a bug stage if points are being added
+    if (bugStage == null && pointsToAdd == 0) {
+      return;
+    }
+
     bugStage ??= BugStage(
-        stage: 'Caterpillar 🐛',
-        progressPoints: 0,
-        updatedAt: DateTime.now(),
-      );
+      stage: 'Caterpillar 🐛',
+      progressPoints: 0,
+      updatedAt: DateTime.now(),
+    );
 
     // Add points
     int newPoints = bugStage.progressPoints + pointsToAdd;
@@ -28,10 +33,10 @@ class BugGrowthService {
       updatedAt: DateTime.now(),
     );
 
-    if (bugStage.id == null) {
+    if (bugStage.key == null) {
       await db.insertBugStage(updatedBugStage);
     } else {
-      await db.updateBugStage(updatedBugStage);
+      await db.updateBugStage(bugStage.key as int, updatedBugStage);
     }
   }
 

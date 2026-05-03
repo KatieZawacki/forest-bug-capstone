@@ -1,47 +1,50 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pet.dart';
+part of 'goal.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PetAdapter extends TypeAdapter<Pet> {
+class GoalAdapter extends TypeAdapter<Goal> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
-  Pet read(BinaryReader reader) {
+  Goal read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Pet(
-      id: fields[0] as String,
-      name: fields[1] as String,
-      type: fields[2] as String,
-      level: fields[3] as int,
-      imagePath: fields[4] as String,
-      state: fields[5] as String,
+    return Goal(
+      id: fields[0] as int?,
+      title: fields[1] as String,
+      description: fields[2] as String,
+      isCompleted: fields[3] as bool,
+      createdAt: fields[4] as DateTime,
+      durationDays: fields[5] as int,
+      frequency: fields[6] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Pet obj) {
+  void write(BinaryWriter writer, Goal obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.type)
+      ..write(obj.description)
       ..writeByte(3)
-      ..write(obj.level)
+      ..write(obj.isCompleted)
       ..writeByte(4)
-      ..write(obj.imagePath)
+      ..write(obj.createdAt)
       ..writeByte(5)
-      ..write(obj.state);
+      ..write(obj.durationDays)
+      ..writeByte(6)
+      ..write(obj.frequency);
   }
 
   @override
@@ -50,7 +53,7 @@ class PetAdapter extends TypeAdapter<Pet> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PetAdapter &&
+      other is GoalAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

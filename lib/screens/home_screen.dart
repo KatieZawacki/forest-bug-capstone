@@ -86,7 +86,7 @@ class HomeScreen extends ConsumerWidget {
                               durationDays: activeGoal.durationDays,
                               frequency: activeGoal.frequency,
                             );
-                            await db.updateGoal(updatedGoal);
+                            await db.updateGoal(activeGoal.key as int, updatedGoal);
                             // ignore: unused_result
                             ref.refresh(goalsProvider);
                           },

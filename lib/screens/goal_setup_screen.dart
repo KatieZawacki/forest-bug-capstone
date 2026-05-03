@@ -14,7 +14,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
   late TextEditingController _titleController;
   late TextEditingController _whyController;
   int _durationDays = 1;
-  String _frequency = 'daily';
+  // Removed frequency field
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
       description: 'Why: ${_whyController.text}',
       createdAt: DateTime.now(),
       durationDays: _durationDays,
-      frequency: _frequency,
+      frequency: 'daily', // default or legacy value
     );
 
     final db = ref.read(databaseProvider);
@@ -143,25 +143,6 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
                             },
                           ),
                           const SizedBox(height: 24),
-                          const Text(
-                            'Frequency',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          DropdownButton<String>(
-                            value: _frequency,
-                            isExpanded: true,
-                            items: const [
-                              DropdownMenuItem(value: 'daily', child: Text('Daily')),
-                              DropdownMenuItem(value: 'weekly', child: Text('Weekly')),
-                              DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
-                            ],
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() => _frequency = value);
-                              }
-                            },
-                          ),
                           const SizedBox(height: 32),
                           SizedBox(
                             width: double.infinity,

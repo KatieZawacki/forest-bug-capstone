@@ -7,7 +7,8 @@ class ForestGrowthService {
   static Future<void> updateForestProgress(
     DatabaseHelper db,
   ) async {
-    var forestProgress = await db.getForestProgress();
+    final progressList = await db.getForestProgress();
+    ForestProgress? forestProgress = progressList.isNotEmpty ? progressList.first : null;
 
     if (forestProgress == null) {
       // Initialize forest
@@ -32,8 +33,7 @@ class ForestGrowthService {
         treesCultivated: newCultivated,
         lastUpdated: DateTime.now(),
       );
-
-      await db.updateForestProgress(updatedProgress);
+      await db.updateForestProgress(forestProgress.key as int, updatedProgress);
     }
   }
 }

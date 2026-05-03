@@ -1,7 +1,15 @@
-class ForestProgress {
+import 'package:hive/hive.dart';
+part 'forest_progress.g.dart';
+
+@HiveType(typeId: 4)
+class ForestProgress extends HiveObject {
+  @HiveField(0)
   final int? id;
+  @HiveField(1)
   final int totalTrees;
+  @HiveField(2)
   final int treesCultivated;
+  @HiveField(3)
   final DateTime lastUpdated;
 
   ForestProgress({

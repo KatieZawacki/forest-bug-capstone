@@ -1,8 +1,17 @@
-class ButterflyUnlock {
+import 'package:hive/hive.dart';
+part 'butterfly_unlock.g.dart';
+
+@HiveType(typeId: 5)
+class ButterflyUnlock extends HiveObject {
+  @HiveField(0)
   final int? id;
+  @HiveField(1)
   final String imagePath;
+  @HiveField(2)
   final DateTime unlockedAt;
+  @HiveField(3)
   final int goalDurationDays; // Duration of the goal in days
+  @HiveField(4)
   final bool isLegendary;
 
   ButterflyUnlock({

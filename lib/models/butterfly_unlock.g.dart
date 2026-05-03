@@ -1,47 +1,44 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pet.dart';
+part of 'butterfly_unlock.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PetAdapter extends TypeAdapter<Pet> {
+class ButterflyUnlockAdapter extends TypeAdapter<ButterflyUnlock> {
   @override
-  final int typeId = 0;
+  final int typeId = 5;
 
   @override
-  Pet read(BinaryReader reader) {
+  ButterflyUnlock read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Pet(
-      id: fields[0] as String,
-      name: fields[1] as String,
-      type: fields[2] as String,
-      level: fields[3] as int,
-      imagePath: fields[4] as String,
-      state: fields[5] as String,
+    return ButterflyUnlock(
+      id: fields[0] as int?,
+      imagePath: fields[1] as String,
+      unlockedAt: fields[2] as DateTime,
+      goalDurationDays: fields[3] as int,
+      isLegendary: fields[4] as bool,
     );
   }
 
   @override
-  void write(BinaryWriter writer, Pet obj) {
+  void write(BinaryWriter writer, ButterflyUnlock obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name)
-      ..writeByte(2)
-      ..write(obj.type)
-      ..writeByte(3)
-      ..write(obj.level)
-      ..writeByte(4)
       ..write(obj.imagePath)
-      ..writeByte(5)
-      ..write(obj.state);
+      ..writeByte(2)
+      ..write(obj.unlockedAt)
+      ..writeByte(3)
+      ..write(obj.goalDurationDays)
+      ..writeByte(4)
+      ..write(obj.isLegendary);
   }
 
   @override
@@ -50,7 +47,7 @@ class PetAdapter extends TypeAdapter<Pet> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PetAdapter &&
+      other is ButterflyUnlockAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
