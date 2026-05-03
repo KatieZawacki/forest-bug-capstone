@@ -9,7 +9,13 @@ class PetListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Your Pets')),
+      appBar: AppBar(
+        title: const Text('Your Pets'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: ListView.builder(
         itemCount: pets.length,
         itemBuilder: (context, index) {

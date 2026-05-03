@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'models/pet.dart';
+import 'models/goal.dart';
 import 'screens/home_screen.dart';
 import 'screens/goal_setup_screen.dart';
 import 'screens/check_in_screen.dart';
@@ -18,7 +19,38 @@ import 'providers/pet_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  // --- BEGIN: CLEAR ALL HIVE BOXES (REMOVE AFTER FIRST RUN) ---
+  final boxNamesToDelete = [
+    'goals',
+    'checkIns',
+    'bugStages',
+    'forestProgress',
+    'butterflyUnlocks',
+    'pets',
+    // add any other box names you use
+  ];
+  for (var boxName in boxNamesToDelete) {
+    try {
+      await Hive.deleteBoxFromDisk(boxName);
+    } catch (e) {
+      // Ignore errors if box doesn't exist
+    }
+  }
+  // --- END: CLEAR ALL HIVE BOXES ---
   Hive.registerAdapter(PetAdapter());
+  Hive.registerAdapter(GoalAdapter());
+
+  // Minimal Hive Goal test
+  var goalBox = await Hive.openBox<Goal>('goals');
+  await goalBox.clear();
+  await goalBox.add(Goal(
+    title: 'Test',
+    description: 'Test',
+    createdAt: DateTime.now(),
+    durationDays: 1,
+  ));
+  print('Goal added!');
+
   await Hive.openBox<Pet>('pets');
   runApp(
     ChangeNotifierProvider(

@@ -6,34 +6,39 @@ class ForestProgress extends HiveObject {
   @HiveField(0)
   final int? id;
   @HiveField(1)
-  final int totalTrees;
+  final int totalTrees; // always 8
   @HiveField(2)
-  final int treesCultivated;
+  final int bloomedTrees; // 0-8
   @HiveField(3)
-  final DateTime lastUpdated;
+  final DateTime lastResetDate;
+  @HiveField(4)
+  final int bloomCycleLength; // days in a cycle
 
   ForestProgress({
     this.id,
-    required this.totalTrees,
-    required this.treesCultivated,
-    required this.lastUpdated,
+    this.totalTrees = 8,
+    required this.bloomedTrees,
+    required this.lastResetDate,
+    this.bloomCycleLength = 8,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'totalTrees': totalTrees,
-      'treesCultivated': treesCultivated,
-      'lastUpdated': lastUpdated.toIso8601String(),
+      'bloomedTrees': bloomedTrees,
+      'lastResetDate': lastResetDate.toIso8601String(),
+      'bloomCycleLength': bloomCycleLength,
     };
   }
 
   factory ForestProgress.fromMap(Map<String, dynamic> map) {
     return ForestProgress(
       id: map['id'],
-      totalTrees: map['totalTrees'],
-      treesCultivated: map['treesCultivated'],
-      lastUpdated: DateTime.parse(map['lastUpdated']),
+      totalTrees: map['totalTrees'] ?? 8,
+      bloomedTrees: map['bloomedTrees'],
+      lastResetDate: DateTime.parse(map['lastResetDate']),
+      bloomCycleLength: map['bloomCycleLength'] ?? 8,
     );
   }
 }

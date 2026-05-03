@@ -43,7 +43,6 @@ class _GoalSetupScreenState extends ConsumerState<GoalSetupScreen> {
       description: 'Why: ${_whyController.text}',
       createdAt: DateTime.now(),
       durationDays: _durationDays,
-      frequency: 'daily', // default or legacy value
     );
 
     final db = ref.read(databaseProvider);

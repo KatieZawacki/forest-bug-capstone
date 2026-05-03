@@ -19,23 +19,26 @@ class ForestProgressAdapter extends TypeAdapter<ForestProgress> {
     return ForestProgress(
       id: fields[0] as int?,
       totalTrees: fields[1] as int,
-      treesCultivated: fields[2] as int,
-      lastUpdated: fields[3] as DateTime,
+      bloomedTrees: fields[2] as int,
+      lastResetDate: fields[3] as DateTime,
+      bloomCycleLength: fields[4] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, ForestProgress obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.totalTrees)
       ..writeByte(2)
-      ..write(obj.treesCultivated)
+      ..write(obj.bloomedTrees)
       ..writeByte(3)
-      ..write(obj.lastUpdated);
+      ..write(obj.lastResetDate)
+      ..writeByte(4)
+      ..write(obj.bloomCycleLength);
   }
 
   @override

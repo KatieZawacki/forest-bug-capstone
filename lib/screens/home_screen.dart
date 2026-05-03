@@ -58,42 +58,47 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   );
                 }
-                final activeGoal = goals.first;
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          activeGoal.title,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                // Show up to 3 active goals
+                final activeGoals = goals.take(3).toList();
+                return Column(
+                  children: [
+                    for (final activeGoal in activeGoals)
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                activeGoal.title,
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(activeGoal.description),
+                              const SizedBox(height: 12),
+                              Checkbox(
+                                value: activeGoal.isCompleted,
+                                onChanged: (value) async {
+                                  if (value == null) return;
+                                  final db = ref.read(databaseProvider);
+                                  final updatedGoal = Goal(
+                                    id: activeGoal.id,
+                                    title: activeGoal.title,
+                                    description: activeGoal.description,
+                                    isCompleted: value,
+                                    createdAt: activeGoal.createdAt,
+                                    durationDays: activeGoal.durationDays,
+                                  );
+                                  await db.updateGoal(activeGoal.key as int, updatedGoal);
+                                  // ignore: unused_result
+                                  ref.refresh(goalsProvider);
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 8),
-                        Text(activeGoal.description),
-                        const SizedBox(height: 12),
-                        Checkbox(
-                          value: activeGoal.isCompleted,
-                          onChanged: (value) async {
-                            if (value == null) return;
-                            final db = ref.read(databaseProvider);
-                            final updatedGoal = Goal(
-                              id: activeGoal.id,
-                              title: activeGoal.title,
-                              description: activeGoal.description,
-                              isCompleted: value,
-                              createdAt: activeGoal.createdAt,
-                              durationDays: activeGoal.durationDays,
-                              frequency: activeGoal.frequency,
-                            );
-                            await db.updateGoal(activeGoal.key as int, updatedGoal);
-                            // ignore: unused_result
-                            ref.refresh(goalsProvider);
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
+                  ],
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
@@ -111,18 +116,42 @@ class HomeScreen extends ConsumerWidget {
               data: (bugStage) {
                 final stage = bugStage?.stage ?? 'Egg 🥚';
                 final progress = bugStage?.progressPoints ?? 0;
+                Widget? eggProgressWidget;
+                if (stage.contains('Egg')) {
+                  // Show up to 3 eggs, one per goal
+                  final goals = goalsAsync.value ?? [];
+                  final eggCount = goals.length.clamp(0, 3);
+                  // Each egg hatches at 50 points
+                  final hatchedEggs = ((progress / 50).floor()).clamp(0, eggCount);
+                  eggProgressWidget = Column(
+                    children: [
+                      Text(
+                        'Eggs: $eggCount',
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          eggCount,
+                          (i) => Text(
+                            i < hatchedEggs ? '🐣' : '🥚',
+                            style: const TextStyle(fontSize: 32),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
                 return Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                          child: Text(
-                            stage,
-                            style: const TextStyle(fontSize: 32),
-                          ),
-                        ),
+                        if (eggProgressWidget != null) ...[
+                          eggProgressWidget,
+                        ],
                         const SizedBox(height: 16),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
@@ -153,8 +182,16 @@ class HomeScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             forestProgressAsync.when(
               data: (forestProgress) {
-                final cultivated = forestProgress?.treesCultivated ?? 0;
-                final total = forestProgress?.totalTrees ?? 10;
+                final bloomed = forestProgress?.bloomedTrees ?? 0;
+                final total = forestProgress?.totalTrees ?? 8;
+                // Show 8 trees, bloomed = green, unbloomed = gray
+                final treeRow = List.generate(
+                  total,
+                  (i) => Text(
+                    i < bloomed ? '🌳' : '🌲',
+                    style: const TextStyle(fontSize: 32),
+                  ),
+                );
                 return Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -162,15 +199,15 @@ class HomeScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Center(
-                          child: Text(
-                            '🌲' * cultivated,
-                            style: const TextStyle(fontSize: 32),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: treeRow,
                           ),
                         ),
                         const SizedBox(height: 16),
                         Center(
                           child: Text(
-                            'Trees: $cultivated / $total',
+                            'Bloomed: $bloomed / $total',
                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -178,12 +215,20 @@ class HomeScreen extends ConsumerWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: LinearProgressIndicator(
-                            value: cultivated / total,
+                            value: total == 0 ? 0 : bloomed / total,
                             minHeight: 12,
                             backgroundColor: Colors.grey[300],
                             valueColor: AlwaysStoppedAnimation<Color>(Colors.green[700]!),
                           ),
                         ),
+                        const SizedBox(height: 8),
+                        if (forestProgress != null)
+                          Center(
+                            child: Text(
+                              'Cycle resets: ${forestProgress.lastResetDate.toLocal().toString().split(' ')[0]}',
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -199,9 +244,11 @@ class HomeScreen extends ConsumerWidget {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/goal-setup');
-                    },
+                    onPressed: goalsAsync.value != null && goalsAsync.value!.length >= 3
+                        ? null
+                        : () {
+                            Navigator.pushNamed(context, '/goal-setup');
+                          },
                     icon: const Icon(Icons.add),
                     label: const Text('New Goal'),
                   ),

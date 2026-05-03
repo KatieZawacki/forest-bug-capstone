@@ -15,8 +15,6 @@ class Goal extends HiveObject {
   final DateTime createdAt;
   @HiveField(5)
   final int durationDays; // Total duration of the goal in days
-  @HiveField(6)
-  final String frequency; // e.g., 'daily', 'weekly', etc.
 
   Goal({
     this.id,
@@ -25,7 +23,6 @@ class Goal extends HiveObject {
     this.isCompleted = false,
     required this.createdAt,
     required this.durationDays,
-    required this.frequency,
   });
 
   Map<String, dynamic> toMap() {
@@ -36,7 +33,6 @@ class Goal extends HiveObject {
       'isCompleted': isCompleted ? 1 : 0,
       'createdAt': createdAt.toIso8601String(),
       'durationDays': durationDays,
-      'frequency': frequency,
     };
   }
 
@@ -48,7 +44,6 @@ class Goal extends HiveObject {
       isCompleted: map['isCompleted'] == 1,
       createdAt: DateTime.parse(map['createdAt']),
       durationDays: map['durationDays'],
-      frequency: map['frequency'],
     );
   }
 
