@@ -20,10 +20,30 @@ class PetListScreen extends StatelessWidget {
         itemCount: pets.length,
         itemBuilder: (context, index) {
           final pet = pets[index];
-          return ListTile(
-            leading: Image.asset(pet.imagePath, width: 40, height: 40),
-            title: Text(pet.name),
-            subtitle: Text('Type: \'${pet.type}\', Level: \'${pet.level}\''),
+          return Card(
+            margin: const EdgeInsets.all(16),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(pet.name, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Text('Type: \'${pet.type}\', Level: \'${pet.level}\''),
+                  const SizedBox(height: 16),
+                  Center(
+                    child: SizedBox(
+                      width: 1000,
+                      height: 1000,
+                      child: Image.asset(
+                        pet.imagePath,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
